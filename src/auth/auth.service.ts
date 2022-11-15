@@ -24,15 +24,16 @@ export class AuthService {
       const res = await this.httpService.axiosRef.post(
         `${process.env.AUTH_SERVICE_URL}/auth/signup`,
         {
-          ...user,
-          role: createdUser.role,
-        },
+          email: user.email,
+          password: user.password, 
+          role: createdUser.role
+        }
       );
 
       return res.data;
     } catch (err) {
       const res = await this.userService.delete(user.email);
-      throw new BadRequestException('Something wrong');
+      throw new BadRequestException(err.response.data.message);
     }
   }
 
