@@ -16,20 +16,20 @@ export class AuthService {
 
   async register(user: CreateUserDto) {
     const registeredUser = await this.userService.getByEmail(user.email);
-
+    
     if (registeredUser) {
       throw new BadRequestException('Something wrong');
     }
-
+  
     const createdUser = await this.userService.create(user);
-
+   
     try {
-      const res = await this.httpService.post('/auth/signup', {...user, role: createdUser.role})
-    
+      const res = await this.httpService.post('/auth/signup', {email: user.email, password: user.password, role: createdUser.role})
+
       return res.data;
     } catch (err) {
       const res = await this.userService.delete(user.email);
-      throw new BadRequestException('Something wrong');
+      throw new BadRequestException(err.response.data.message);
     }
   }
 
