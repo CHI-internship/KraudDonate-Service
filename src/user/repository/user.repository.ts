@@ -28,6 +28,9 @@ export default class UserRepository extends Repository {
       where: {
         email,
       },
+      include: {
+        orders: true,
+      },
     });
   }
 
