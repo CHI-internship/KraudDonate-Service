@@ -10,7 +10,7 @@ export class UserService {
   constructor(
     private userRepository: UserRepository,
     private awsService: AwsService,
-  ) { }
+  ) {}
 
   async getByEmail(email: string) {
     const user = await this.userRepository.getByEmail(email);
