@@ -19,9 +19,6 @@ export const CreateOrderSchema: JSONSchemaType<CreateOrderDto> = {
     goal_amount: {
       type: 'number',
     },
-    sum: {
-      type: 'number',
-    },
     short_info: {
       type: 'string',
     },
@@ -36,7 +33,6 @@ export const CreateOrderSchema: JSONSchemaType<CreateOrderDto> = {
     'user_id',
     'photo',
     'goal_amount',
-    'sum',
     'short_info',
     'finished_at',
   ],

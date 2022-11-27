@@ -1,1 +1,1 @@
-export * from './aws-bucket-folders.enum'
+export * from './aws-bucket-folders.enum';

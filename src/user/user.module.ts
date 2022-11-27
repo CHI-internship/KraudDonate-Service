@@ -19,4 +19,4 @@ import { PrismaService, AuthHandleService, AwsService } from 'src/services';
     AwsService,
   ],
 })
-export class UserModule { }
+export class UserModule {}

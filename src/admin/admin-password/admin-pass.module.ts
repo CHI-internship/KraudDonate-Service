@@ -11,4 +11,4 @@ import { AdminPassService } from './admin-pass.service';
   controllers: [AdminPassController],
   providers: [AdminPassService, PrismaService, AdminService],
 })
-export class AdminPassModule { }
+export class AdminPassModule {}

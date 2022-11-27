@@ -4,7 +4,7 @@ import { PrismaService } from 'src/services';
 
 @Injectable()
 export default abstract class Repository {
-  constructor(protected readonly prismaService: PrismaService) { }
+  constructor(protected readonly prismaService: PrismaService) {}
 
   async query(query: string) {
     const data = await this.prismaService.$queryRaw(Prisma.sql`${query}`);

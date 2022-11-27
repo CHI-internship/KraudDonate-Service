@@ -56,8 +56,9 @@ export class AwsService {
   }
 
   async deleteFile(location: string) {
-    const key = `${location.split('/').reverse()[1]}/${location.split('/').reverse()[0]
-      }`;
+    const key = `${location.split('/').reverse()[1]}/${
+      location.split('/').reverse()[0]
+    }`;
     const params = {
       Bucket: process.env.AWS_BUCKET_NAME,
       Key: key,

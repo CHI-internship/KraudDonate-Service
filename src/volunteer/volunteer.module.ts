@@ -8,4 +8,4 @@ import VolunteerRepository from './repository/volunteer.repository';
   providers: [VolunteerService, PrismaService, VolunteerRepository, AwsService],
   controllers: [VolunteerController],
 })
-export class VolunteerModule { }
+export class VolunteerModule {}

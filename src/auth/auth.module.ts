@@ -13,4 +13,4 @@ import { AwsService } from 'src/services/aws.service';
   controllers: [AuthController],
   providers: [AuthService, PrismaService, UserService, AwsService],
 })
-export class AuthModule { }
+export class AuthModule {}

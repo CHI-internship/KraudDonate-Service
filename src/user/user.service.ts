@@ -4,13 +4,14 @@ import { AwsService } from 'src/services/aws.service';
 import { AwsBucketFolders } from 'src/types';
 import { UpdateUserDto } from './dto/update-user.dto';
 import UserRepository from './repository/user.repository';
+import * as gravatar from 'gravatar';
 
 @Injectable()
 export class UserService {
   constructor(
     private userRepository: UserRepository,
     private awsService: AwsService,
-  ) { }
+  ) {}
 
   async getByEmail(email: string) {
     const user = await this.userRepository.getByEmail(email);
@@ -23,6 +24,11 @@ export class UserService {
   }
 
   async create(user: CreateUserDto) {
+    user.photo = gravatar.url(
+      user.email.trim().toLowerCase(),
+      { d: 'mp' },
+      false,
+    );
     const newUser = await this.userRepository.create(user);
     return newUser;
   }

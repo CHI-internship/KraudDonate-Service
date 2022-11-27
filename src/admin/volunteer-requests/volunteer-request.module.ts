@@ -5,6 +5,7 @@ import { PrismaService, AwsService } from 'src/services';
 import VolunteerRequestsRepository from './repository/volunteer-requests.repository';
 import UserRepository from 'src/user/repository/user.repository';
 import { UserService } from 'src/user/user.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [],
@@ -16,6 +17,7 @@ import { UserService } from 'src/user/user.service';
     UserRepository,
     UserService,
     AwsService,
+    JwtService,
   ],
 })
-export class VolunteerRequestModule { }
+export class VolunteerRequestModule {}

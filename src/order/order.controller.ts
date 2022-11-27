@@ -6,6 +6,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
@@ -15,6 +16,7 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AuthHandleService } from 'src/services';
 import { AjvValidationPipe } from 'src/utils/validator/validation';
 import {
   CreateOrderSchema,
@@ -30,7 +32,8 @@ import { IdUserIdDto } from '../utils/validator/dto/idUserId.dto';
 @ApiTags('Orders')
 @Controller('orders')
 export class OrderController {
-  constructor(private orderService: OrderService) {}
+  constructor(private orderService: OrderService,
+    private readonly authHandleService: AuthHandleService) { }
 
   @ApiResponse({ status: 200, description: 'Get all Orders from DB' })
   @Get()
@@ -53,8 +56,9 @@ export class OrderController {
   @Roles('volunteer')
   @Post()
   @UsePipes(new AjvValidationPipe(CreateOrderSchema))
-  async createOrder(@Body() order: CreateOrderDto) {
-    return this.orderService.createOrder(order);
+  async createOrder(@Req() req, @Body() order: CreateOrderDto) {
+    const { email } = this.authHandleService.getPayload(req.headers['authorization'])
+    return this.orderService.createOrder(order, email);
   }
 
   @ApiResponse({ status: 204, description: 'Order was updated' })

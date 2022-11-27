@@ -9,4 +9,4 @@ import { PasswordController } from './password.controller';
   providers: [PasswordService, PrismaService],
   imports: [HttpModule],
 })
-export class PasswordModule { }
+export class PasswordModule {}

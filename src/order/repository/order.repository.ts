@@ -54,7 +54,6 @@ export default class OrderRepository extends Repository {
           user_id: order.user_id,
           photo: order.photo,
           goal_amount: order.goal_amount,
-          sum: order.sum,
           short_info: order.short_info,
           finished_at: new Date(order.finished_at).toISOString(),
         },

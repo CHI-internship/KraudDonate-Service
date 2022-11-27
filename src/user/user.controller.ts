@@ -22,7 +22,7 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly authHandleService: AuthHandleService,
-  ) { }
+  ) {}
 
   @ApiResponse({ status: 200, description: 'Return user info' })
   @Roles('customer')

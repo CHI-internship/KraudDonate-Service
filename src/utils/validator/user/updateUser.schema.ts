@@ -19,7 +19,7 @@ export const UpdateUserSchema: JSONSchemaType<UpdateUserDto> = {
       minLength: 3,
       nullable: true,
     },
-    imgBase64: {
+    image: {
       type: 'string',
       nullable: true,
     },

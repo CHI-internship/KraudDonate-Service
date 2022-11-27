@@ -1,3 +1,4 @@
+import { UserService } from 'src/user/user.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import OrderRepository from 'src/order/repository/order.repository';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -10,7 +11,7 @@ export class OrderService {
   constructor(
     private orderRepository: OrderRepository,
     private awsService: AwsService,
-  ) {}
+    private userService: UserService) { }
 
   async getAllOrders(limit: number, sort, page: number, search: string) {
     return this.orderRepository.getAllOrders(limit, sort, page, search);
@@ -20,14 +21,17 @@ export class OrderService {
     return this.orderRepository.getOrderById(id);
   }
 
-  async createOrder(order: CreateOrderDto) {
+  async createOrder(order: CreateOrderDto, userEmail: string) {
+    const user = await this.userService.getByEmail(userEmail)
+    if (!user) throw new BadRequestException('User not found')
+
     if (order.photo) {
       order.photo = await this.awsService.uploadImg(
         order.photo,
         AwsBucketFolders.ORDER,
       );
     }
-    return this.orderRepository.createOrder(order);
+    return this.orderRepository.createOrder({ ...order, user_id: user.id });
   }
 
   async updateOrder(order: UpdateOrderDto, id: number) {
