@@ -97,7 +97,7 @@ export default class OrderRepository extends Repository {
       });
   }
 
-  async getOrderByIdByUserId(id: number, user_id: number) {
+  async getUserOrder(id: number, user_id: number) {
     return await this.prismaService.order
       .findFirst({
         where: {

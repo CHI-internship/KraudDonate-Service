@@ -4,12 +4,14 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { AwsBucketFolders } from 'src/types';
 import { AwsService } from 'src/services';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class OrderService {
   constructor(
     private orderRepository: OrderRepository,
     private awsService: AwsService,
+    private userService: UserService,
   ) {}
 
   async getAllOrders(limit: number, sort, page: number, search: string) {
@@ -46,7 +48,12 @@ export class OrderService {
     return this.orderRepository.updateOrder(order, id);
   }
 
-  async getOrderByIdByUserId(id: number, userId: number) {
-    return this.orderRepository.getOrderByIdByUserId(id, userId);
+  async getUserOrder(id: number, email: string) {
+    const user = await this.userService.getByEmail(email);
+    if (user) {
+      return this.orderRepository.getUserOrder(id, user.id);
+    } else {
+      throw new BadRequestException('User not found');
+    }
   }
 }

@@ -6,6 +6,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
@@ -26,11 +27,15 @@ import {
 import { AllOrdersDto } from 'src/utils/validator/dto/allOrders.dto';
 import { IdDto } from 'src/utils/validator/dto/id.dto';
 import { IdUserIdDto } from '../utils/validator/dto/idUserId.dto';
+import { AuthHandleService } from '../services';
 
 @ApiTags('Orders')
 @Controller('orders')
 export class OrderController {
-  constructor(private orderService: OrderService) {}
+  constructor(
+    private orderService: OrderService,
+    private authHandleService: AuthHandleService,
+  ) {}
 
   @ApiResponse({ status: 200, description: 'Get all Orders from DB' })
   @Get()
@@ -78,8 +83,11 @@ export class OrderController {
   @UseGuards(RolesGuard)
   @Roles('volunteer')
   @UsePipes(new AjvValidationPipe(IdUserIdSchema))
-  async getOrderByIdByUserId(@Param() idUserId: IdUserIdDto) {
-    const { id, userId } = idUserId;
-    return this.orderService.getOrderByIdByUserId(+id, +userId);
+  async getUserOrder(@Param() idUserId: IdUserIdDto, @Req() req) {
+    const { email } = this.authHandleService.getPayload(
+      req.headers['authorization'],
+    );
+    const { id } = idUserId;
+    return this.orderService.getUserOrder(+id, email);
   }
 }
