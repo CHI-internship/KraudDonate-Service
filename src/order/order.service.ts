@@ -22,7 +22,10 @@ export class OrderService {
     return this.orderRepository.getOrderById(id);
   }
 
-  async createOrder(order: CreateOrderDto) {
+  async createOrder(order: CreateOrderDto, userEmail: string) {
+    const user = await this.userService.getByEmail(userEmail);
+    if (!user) throw new BadRequestException('User not found');
+
     if (order.photo) {
       order.photo = await this.awsService.uploadImg(
         order.photo,
@@ -50,10 +53,7 @@ export class OrderService {
 
   async getUserOrder(id: number, email: string) {
     const user = await this.userService.getByEmail(email);
-    if (user) {
-      return this.orderRepository.getUserOrder(id, user.id);
-    } else {
-      throw new BadRequestException('User not found');
-    }
+    if (!user) throw new BadRequestException('User not found');
+    return this.orderRepository.getUserOrder(id, user.id);
   }
 }
