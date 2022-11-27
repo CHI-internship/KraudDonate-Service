@@ -24,7 +24,6 @@ export const UpdateOrderSchema: JSONSchemaType<UpdateOrderDto> = {
     },
     finished_at: {
       type: 'string',
-      format: 'custom-date',
     },
   },
   required: [],

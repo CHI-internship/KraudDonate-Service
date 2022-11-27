@@ -21,9 +21,11 @@ import {
   UpdateOrderSchema,
   getAllOrdersSchema,
   IdSchema,
+  IdUserIdSchema,
 } from 'src/utils/validator/order';
 import { AllOrdersDto } from 'src/utils/validator/dto/allOrders.dto';
 import { IdDto } from 'src/utils/validator/dto/id.dto';
+import { IdUserIdDto } from '../utils/validator/dto/idUserId.dto';
 
 @ApiTags('Orders')
 @Controller('orders')
@@ -66,5 +68,18 @@ export class OrderController {
   ) {
     const { id } = idNum;
     return this.orderService.updateOrder(order, +id);
+  }
+
+  @ApiResponse({
+    status: 200,
+    description: 'Get full information about order by userId',
+  })
+  @Get('/:id/:userId')
+  @UseGuards(RolesGuard)
+  @Roles('volunteer')
+  @UsePipes(new AjvValidationPipe(IdUserIdSchema))
+  async getOrderByIdByUserId(@Param() idUserId: IdUserIdDto) {
+    const { id, userId } = idUserId;
+    return this.orderService.getOrderByIdByUserId(+id, +userId);
   }
 }
