@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { GetVolunteerDto } from './dto/get-Volunteer.dto';
 import VolunteerRepository from './repository/volunteer.repository';
-import { AwsBucketFolders } from 'src/types';
-import { AwsService } from 'src/services';
+import { AwsBucketFolders } from '../types';
+import { AwsService } from '../services';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 

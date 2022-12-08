@@ -1,6 +1,6 @@
-import Repository from 'src/repository/repository';
 import { GetVolunteerDto } from '../dto/get-Volunteer.dto';
 import { BadRequestException } from '@nestjs/common';
+import Repository from '../../repository/repository';
 
 export default class VolunteerRepository extends Repository {
   async getRequestById(userId: number) {
