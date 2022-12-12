@@ -9,15 +9,15 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { UpdateUserSchema } from '../utils/validator/user';
-import { AjvValidationPipe } from 'src/utils/validator/validation';
+import { AjvValidationPipe } from '../utils/validator/validation';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
-import { AuthHandleService } from 'src/services';
-import { IdSchema } from 'src/utils/validator/order';
-import { IdDto } from 'src/utils/validator/dto/id.dto';
+import { AuthHandleService } from '../services';
+import { IdSchema } from '../utils/validator/order';
+import { IdDto } from '../utils/validator/dto/id.dto';
 import { Request } from 'express';
 @ApiTags('User')
 @Controller('user')

@@ -16,16 +16,16 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AuthHandleService } from 'src/services';
-import { AjvValidationPipe } from 'src/utils/validator/validation';
+import { AuthHandleService } from '../services';
+import { AjvValidationPipe } from '../utils/validator/validation';
 import {
   CreateOrderSchema,
   UpdateOrderSchema,
   IdSchema,
   PaginationSchema,
-} from 'src/utils/validator/order';
-import { PaginationDto } from 'src/utils/validator/dto/pagination.dto';
-import { IdDto } from 'src/utils/validator/dto/id.dto';
+} from '../utils/validator/order';
+import { PaginationDto } from '../utils/validator/dto/pagination.dto';
+import { IdDto } from '../utils/validator/dto/id.dto';
 
 @ApiTags('Orders')
 @Controller('orders')

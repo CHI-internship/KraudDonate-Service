@@ -1,10 +1,10 @@
-import { UserService } from 'src/user/user.service';
+import { UserService } from '../user/user.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import OrderRepository from 'src/order/repository/order.repository';
+import OrderRepository from '../order/repository/order.repository';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { AwsBucketFolders } from 'src/types';
-import { AwsService } from 'src/services';
+import { AwsBucketFolders } from '../types';
+import { AwsService } from '../services/aws.service';
 
 @Injectable()
 export class OrderService {

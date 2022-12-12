@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import Repository from 'src/repository/repository';
+import Repository from '../../repository/repository';
 import { CreateOrderDto } from '../dto/create-order.dto';
 import { UpdateOrderDto } from '../dto/update-order.dto';
 
