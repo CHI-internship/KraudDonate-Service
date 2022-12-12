@@ -1,22 +1,19 @@
-import * as jwt from 'jsonwebtoken';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { LoginUserDto } from './dto/login-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UserService } from 'src/user/user.service';
-import { IHttpService } from 'src/utils/http/http.interface';
-import HttpService from 'src/utils/http/http.service';
+import { UserService } from '../user/user.service';
+import { IHttpService } from '../utils/http/http.interface';
+import HttpService from '../utils/http/http.service';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { AuthHandleService } from '../services';
 
 @Injectable()
 export class AuthService {
-  private readonly httpService: IHttpService;
   constructor(
     private readonly userService: UserService,
     private readonly authHandleService: AuthHandleService,
-  ) {
-    this.httpService = new HttpService(process.env.AUTH_SERVICE_URL!);
-  }
+    private readonly httpService: HttpService,
+  ) {}
 
   async register(user: CreateUserDto) {
     const registeredUser = await this.userService.getByEmail(user.email);
@@ -24,6 +21,7 @@ export class AuthService {
 
     delete user.recaptchaToken;
     const createdUser = await this.userService.create(user);
+
     try {
       const res = await this.httpService.post('/auth/signup', {
         email: user.email,

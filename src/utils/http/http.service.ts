@@ -1,11 +1,13 @@
 import axios, { AxiosInstance } from 'axios';
 import { IHttpService } from './http.interface';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export default class HttpService implements IHttpService {
   private http: AxiosInstance;
-  constructor(uri: string) {
+  constructor() {
     this.http = axios.create({
-      baseURL: uri,
+      baseURL: process.env.AUTH_SERVICE_URL!,
     });
   }
 
