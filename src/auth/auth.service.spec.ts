@@ -1,26 +1,41 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
-import {
-  createMock,
-  deleteMock,
-  getByEmailMock,
-  UserServiceMock,
-} from './__mocks__/user.service.mock';
 import { JwtService } from '@nestjs/jwt';
 import { JwtServiceMock } from './__mocks__/jwt.service.mock';
 import { HttpServiceMock, postMock } from './__mocks__/http.service.mock';
-import { AuthHandleService } from '../services';
+import { AuthHandleService, AwsService, PrismaService } from '../services';
 import HttpService from '../utils/http/http.service';
-import { AxiosErrorMock } from './__mocks__/axios-error.mock';
 import {
   AuthHandleServiceMock,
   getPayloadMock,
 } from './__mocks__/auth-handle.service.mock';
+import UserRepository from '../user/repository/user.repository';
+import {
+  BadRequestException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 
 describe('AuthService', () => {
   let authService: AuthService;
   process.env.ALGORITM_DECODE_PASSWORD = 'sha256';
+  const prismaService = new PrismaService();
+
+  const createUserDataMock = {
+    email: 'test@gmail.com',
+    name: 'name',
+    lastname: 'lastname',
+    password: 'Test_123',
+  };
+
+  const loginUserDataMock = {
+    email: 'test@gmail.com',
+    password: 'Test_123',
+  };
+
+  const refreshTokenMock = {
+    refreshToken: 'random-refresh-token',
+  };
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -30,13 +45,14 @@ describe('AuthService', () => {
       providers: [
         AuthService,
         UserService,
+        UserRepository,
         JwtService,
         AuthHandleService,
         HttpService,
+        AwsService,
+        PrismaService,
       ],
     })
-      .overrideProvider(UserService)
-      .useClass(UserServiceMock)
       .overrideProvider(JwtService)
       .useClass(JwtServiceMock)
       .overrideProvider(HttpService)
@@ -48,23 +64,29 @@ describe('AuthService', () => {
     authService = module.get<AuthService>(AuthService);
   });
 
+  afterEach(async () => {
+    const user = await prismaService.user.findUnique({
+      where: { email: createUserDataMock.email },
+    });
+    if (user) {
+      await prismaService.user.delete({
+        where: {
+          email: createUserDataMock.email,
+        },
+      });
+    }
+    await prismaService.$disconnect();
+  });
+
   describe('Login', () => {
     it('should return access and refresh tokens', async () => {
-      const loginUserDto = {
-        email: 'test@gmail.com',
-        password: 'Test_123',
-      };
-
-      getByEmailMock.mockImplementationOnce(async () => ({
-        id: 1,
-        email: 'test@gmail.com',
-        name: 'name',
-        lastname: 'lastname',
-        role: 'volunteer',
-        photo: 'photo',
-        createdAt: new Date('2022-12-09T13:54:37.019Z'),
-        updatedAt: new Date('2022-12-09T13:54:37.019Z'),
-      }));
+      await prismaService.user.create({
+        data: {
+          email: createUserDataMock.email,
+          name: createUserDataMock.name,
+          lastname: createUserDataMock.lastname,
+        },
+      });
 
       postMock.mockImplementationOnce(async () => ({
         data: {
@@ -73,7 +95,7 @@ describe('AuthService', () => {
         },
       }));
 
-      const result = await authService.login(loginUserDto);
+      const result = await authService.login(loginUserDataMock);
 
       expect(result).toEqual({
         accessToken: expect.any(String),
@@ -82,13 +104,6 @@ describe('AuthService', () => {
     });
 
     it('should throw BadRequestException "Something wrong", when user not found', async () => {
-      const loginUserDto = {
-        email: 'test@gmail.com',
-        password: 'Test_123',
-      };
-
-      getByEmailMock.mockImplementationOnce(async () => undefined);
-
       postMock.mockImplementationOnce(async () => ({
         data: {
           accessToken: 'random-access-token',
@@ -96,58 +111,32 @@ describe('AuthService', () => {
         },
       }));
 
-      try {
-        const res = await authService.login(loginUserDto);
-      } catch (err) {
-        expect(err.message).toBe('Something wrong');
-      }
+      await expect(authService.login(loginUserDataMock)).rejects.toEqual(
+        new BadRequestException('Something wrong'),
+      );
     });
 
     it('should throw BadRequestException "Invalid email or password"', async () => {
-      const loginUserDto = {
-        email: 'test@gmail.com',
-        password: 'Test_123456789',
-      };
+      await prismaService.user.create({
+        data: {
+          email: createUserDataMock.email,
+          name: createUserDataMock.name,
+          lastname: createUserDataMock.lastname,
+        },
+      });
 
-      getByEmailMock.mockImplementationOnce(async () => ({
-        email: 'test@gmail.com',
-        // hashed Test_123
-        password:
-          '9bc646e4613a5dd1181d2bb4d82aa8cead379b3404b7c136130a150f00a03e58',
-        role: 'customer',
-      }));
+      postMock.mockImplementationOnce(async () => {
+        throw new Error();
+      });
 
-      postMock.mockImplementationOnce(async () => undefined);
-
-      try {
-        const res = await authService.login(loginUserDto);
-      } catch (err) {
-        expect(err.message).toBe('Invalid email or password');
-      }
+      await expect(authService.login(loginUserDataMock)).rejects.toEqual(
+        new BadRequestException('Invalid email or password'),
+      );
     });
   });
 
   describe('Registration', () => {
     it('should create user and return access and refresh tokens', async () => {
-      const createUserDto = {
-        email: 'test@gmail.com',
-        name: 'name',
-        lastname: 'lastname',
-        password: 'Test_123',
-      };
-
-      getByEmailMock.mockImplementationOnce(async () => undefined);
-
-      createMock.mockImplementationOnce(async () => ({
-        id: 1,
-        email: 'test@gmail.com',
-        name: 'name',
-        lastname: 'lastname',
-        role: 'customer',
-        createdAt: new Date('2022-12-09T13:54:37.019Z'),
-        updatedAt: new Date('2022-12-09T13:54:37.019Z'),
-      }));
-
       postMock.mockImplementationOnce(async () => ({
         data: {
           accessToken: 'random-access-token',
@@ -155,7 +144,7 @@ describe('AuthService', () => {
         },
       }));
 
-      const result = await authService.register(createUserDto);
+      const result = await authService.register(createUserDataMock);
 
       expect(result).toEqual({
         accessToken: expect.any(String),
@@ -164,32 +153,13 @@ describe('AuthService', () => {
     });
 
     it('should throw BadRequestException "Something wrong", when user exist', async () => {
-      const createUserDto = {
-        email: 'test@gmail.com',
-        name: 'name',
-        lastname: 'lastname',
-        password: 'Test_123',
-      };
-
-      getByEmailMock.mockImplementationOnce(async () => ({
-        id: 1,
-        email: 'test@gmail.com',
-        name: 'name',
-        lastname: 'lastname',
-        role: 'customer',
-        createdAt: new Date('2022-12-09T13:54:37.019Z'),
-        updatedAt: new Date('2022-12-09T13:54:37.019Z'),
-      }));
-
-      createMock.mockImplementationOnce(async () => ({
-        id: 1,
-        email: 'test@gmail.com',
-        name: 'name',
-        lastname: 'lastname',
-        role: 'customer',
-        createdAt: new Date('2022-12-09T13:54:37.019Z'),
-        updatedAt: new Date('2022-12-09T13:54:37.019Z'),
-      }));
+      await prismaService.user.create({
+        data: {
+          email: createUserDataMock.email,
+          name: createUserDataMock.name,
+          lastname: createUserDataMock.lastname,
+        },
+      });
 
       postMock.mockImplementationOnce(async () => ({
         data: {
@@ -198,69 +168,24 @@ describe('AuthService', () => {
         },
       }));
 
-      try {
-        const res = await authService.register(createUserDto);
-      } catch (err) {
-        expect(err.message).toBe('Something wrong');
-      }
+      await expect(authService.register(createUserDataMock)).rejects.toEqual(
+        new BadRequestException('Something wrong'),
+      );
     });
 
     it('should throw BadRequestException, when something wrong on auth service', async () => {
-      const axiosError = new AxiosErrorMock({
-        response: {
-          data: {
-            message: 'Error',
-          },
-        },
-      });
-
-      const createUserDto = {
-        email: 'test@gmail.com',
-        name: 'name',
-        lastname: 'lastname',
-        password: 'Test_123',
-      };
-
-      getByEmailMock.mockImplementationOnce(async () => undefined);
-
-      createMock.mockImplementationOnce(async () => ({
-        id: 1,
-        email: 'test@gmail.com',
-        name: 'name',
-        lastname: 'lastname',
-        role: 'customer',
-        createdAt: new Date('2022-12-09T13:54:37.019Z'),
-        updatedAt: new Date('2022-12-09T13:54:37.019Z'),
-      }));
-
-      deleteMock.mockImplementationOnce(async () => ({
-        id: 1,
-        email: 'test@gmail.com',
-        name: 'name',
-        lastname: 'lastname',
-        role: 'customer',
-        createdAt: new Date('2022-12-09T13:54:37.019Z'),
-        updatedAt: new Date('2022-12-09T13:54:37.019Z'),
-      }));
-
       postMock.mockImplementationOnce(async () => {
-        throw axiosError.error;
+        throw new Error();
       });
 
-      try {
-        const res = await authService.register(createUserDto);
-      } catch (err) {
-        expect(err.message).toEqual(expect.any(String));
-      }
+      await expect(authService.register(createUserDataMock)).rejects.toEqual(
+        new InternalServerErrorException('Internal server error'),
+      );
     });
   });
 
   describe('Refresh', () => {
     it('should return access and refresh tokens', async () => {
-      const refreshTokenDto = {
-        refreshToken: 'random-refresh-token',
-      };
-
       getPayloadMock.mockImplementationOnce(() => ({
         email: 'test@gmail.com',
         role: 'customer',
@@ -273,7 +198,7 @@ describe('AuthService', () => {
         },
       }));
 
-      const result = await authService.refreshTokens(refreshTokenDto);
+      const result = await authService.refreshTokens(refreshTokenMock);
 
       expect(result).toEqual({
         accessToken: expect.any(String),
@@ -282,24 +207,18 @@ describe('AuthService', () => {
     });
 
     it('should throw BadRequestException, when something wrong on auth service', async () => {
-      const refreshTokenDto = {
-        refreshToken: 'random-refresh-token',
-      };
-
       getPayloadMock.mockImplementationOnce(() => ({
         email: 'test@gmail.com',
         role: 'customer',
       }));
 
       postMock.mockImplementationOnce(async () => {
-        throw new Error('Error');
+        throw new Error();
       });
 
-      const result = await authService
-        .refreshTokens(refreshTokenDto)
-        .catch((err) => {
-          expect(err.message).toEqual(expect.any(String));
-        });
+      await expect(authService.refreshTokens(refreshTokenMock)).rejects.toEqual(
+        new BadRequestException('Something wrong'),
+      );
     });
   });
 });

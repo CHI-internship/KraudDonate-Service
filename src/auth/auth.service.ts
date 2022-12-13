@@ -1,8 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { LoginUserDto } from './dto/login-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from '../user/user.service';
-import { IHttpService } from '../utils/http/http.interface';
 import HttpService from '../utils/http/http.service';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { AuthHandleService } from '../services';
@@ -32,12 +35,13 @@ export class AuthService {
       return res.data;
     } catch (err) {
       const res = await this.userService.delete(user.email);
-      throw new BadRequestException(err.response.data.message);
+      throw new InternalServerErrorException('Internal server error');
     }
   }
 
   async login(credentials: LoginUserDto) {
     const registeredUser = await this.userService.getByEmail(credentials.email);
+    console.log(registeredUser);
     if (!registeredUser) {
       throw new BadRequestException('Something wrong');
     }
@@ -58,7 +62,7 @@ export class AuthService {
     const res = await this.httpService
       .post('/auth/refresh-tokens', { email, role })
       .catch((err) => {
-        throw new BadRequestException(err);
+        throw new BadRequestException('Something wrong');
       });
     return res.data;
   }
