@@ -22,10 +22,12 @@ import { HintModule } from './hint/hint.module';
 import { StripeModule } from './stripe/stripe.module';
 import { BullModule } from '@nestjs/bull';
 import { LoggerMiddleware } from './middlewares/req.logger';
+import { UserModule as MyownuserModule } from './myownuser/user.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: '.env' }),
+    MyownuserModule,
     UserModule,
     AuthModule,
     AdminAuthModule,

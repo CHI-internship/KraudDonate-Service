@@ -1,9 +1,19 @@
 import { BadRequestException } from '@nestjs/common';
+import { identity } from 'rxjs';
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
 import Repository from '../../repository/repository';
 import { UpdateUserDto } from '../dto/update-user.dto';
 
 export default class UserRepository extends Repository {
+  async simpleGet(id: number) {
+    const user = await this.prismaService.user.findFirst({
+      where: {
+        id,
+      },
+    });
+    return user;
+  }
+
   async update({ name, lastname, image }: UpdateUserDto, userId: number) {
     const user = await this.prismaService.user
       .update({
