@@ -3,7 +3,12 @@ import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { JwtServiceMock } from './__mocks__/jwt.service.mock';
-import { HttpServiceMock, postMock } from './__mocks__/http.service.mock';
+import {
+  HttpServiceMock,
+  refreshTokenMock,
+  signInMock,
+  signUpMock,
+} from './__mocks__/http.service.mock';
 import { AuthHandleService, AwsService, PrismaService } from '../services';
 import HttpService from '../utils/http/http.service';
 import {
@@ -11,10 +16,7 @@ import {
   getPayloadMock,
 } from './__mocks__/auth-handle.service.mock';
 import UserRepository from '../user/repository/user.repository';
-import {
-  BadRequestException,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -33,7 +35,7 @@ describe('AuthService', () => {
     password: 'Test_123',
   };
 
-  const refreshTokenMock = {
+  const refreshTokenDataMock = {
     refreshToken: 'random-refresh-token',
   };
 
@@ -88,7 +90,7 @@ describe('AuthService', () => {
         },
       });
 
-      postMock.mockImplementationOnce(async () => ({
+      signInMock.mockImplementationOnce(async () => ({
         data: {
           accessToken: 'random-access-token',
           refreshToken: 'random-refresh-token',
@@ -106,7 +108,7 @@ describe('AuthService', () => {
     });
 
     it('should throw BadRequestException "Something wrong", when user not found', async () => {
-      postMock.mockImplementationOnce(async () => ({
+      signInMock.mockImplementationOnce(async () => ({
         data: {
           accessToken: 'random-access-token',
           refreshToken: 'random-refresh-token',
@@ -127,7 +129,7 @@ describe('AuthService', () => {
         },
       });
 
-      postMock.mockImplementationOnce(async () => {
+      signInMock.mockImplementationOnce(async () => {
         throw new Error();
       });
 
@@ -139,7 +141,7 @@ describe('AuthService', () => {
 
   describe('Registration', () => {
     it('should create user and return access and refresh tokens', async () => {
-      postMock.mockImplementationOnce(async () => ({
+      signUpMock.mockImplementationOnce(async () => ({
         data: {
           accessToken: 'random-access-token',
           refreshToken: 'random-refresh-token',
@@ -165,7 +167,7 @@ describe('AuthService', () => {
         },
       });
 
-      postMock.mockImplementationOnce(async () => ({
+      signUpMock.mockImplementationOnce(async () => ({
         data: {
           accessToken: 'random-access-token',
           refreshToken: 'random-refresh-token',
@@ -178,13 +180,13 @@ describe('AuthService', () => {
     });
 
     it('should throw BadRequestException, when something wrong on auth service', async () => {
-      postMock.mockImplementationOnce(async () => {
+      signUpMock.mockImplementationOnce(async () => {
         throw new Error();
       });
 
-      await expect(authService.register(createUserDataMock)).rejects.toEqual(
-        new InternalServerErrorException('Internal server error'),
-      );
+      await authService
+        .register(createUserDataMock)
+        .catch((err) => expect(err).rejects);
     });
   });
 
@@ -195,14 +197,14 @@ describe('AuthService', () => {
         role: 'customer',
       }));
 
-      postMock.mockImplementationOnce(async () => ({
+      refreshTokenMock.mockImplementationOnce(async () => ({
         data: {
           accessToken: 'random-access-token',
           refreshToken: 'random-refresh-token',
         },
       }));
 
-      const result = await authService.refreshTokens(refreshTokenMock);
+      const result = await authService.refreshTokens(refreshTokenDataMock);
 
       const expectedResult = {
         accessToken: expect.any(String),
@@ -218,13 +220,13 @@ describe('AuthService', () => {
         role: 'customer',
       }));
 
-      postMock.mockImplementationOnce(async () => {
+      refreshTokenMock.mockImplementationOnce(async () => {
         throw new Error();
       });
 
-      await expect(authService.refreshTokens(refreshTokenMock)).rejects.toEqual(
-        new BadRequestException('Something wrong'),
-      );
+      await expect(
+        authService.refreshTokens(refreshTokenDataMock),
+      ).rejects.toEqual(new BadRequestException('Something wrong'));
     });
   });
 });

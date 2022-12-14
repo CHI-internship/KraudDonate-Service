@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { LoginUserDto } from './dto/login-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UserService } from 'src/user/user.service';
-import HttpService from 'src/utils/http/http.service';
+import { UserService } from '../user/user.service';
+import HttpService from '../utils/http/http.service';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { AuthHandleService } from '../services';
 
@@ -53,7 +53,11 @@ export class AuthService {
   async refreshTokens(rawRefreshToken: RefreshTokenDto) {
     const { refreshToken } = rawRefreshToken;
     const { email, role } = this.authHandleService.getPayload(refreshToken);
-    const res = await this.httpService.refreshToken(email, role);
+    const res = await this.httpService
+      .refreshToken(email, role)
+      .catch((err) => {
+        throw new BadRequestException('Something wrong');
+      });
 
     return res.data;
   }
