@@ -46,14 +46,14 @@ export class VolunteerService {
     const sevenDaysToMs = 604800000;
     const request = await this.volunteerRepository
       .createRequest(volunteerRequest)
-    .then(async (data) => {
-      await this.volunterQueue.add('activationRequest', data.id, {
-        delay: sevenDaysToMs,
+      .then(async (data) => {
+        await this.volunterQueue.add('activationRequest', data.id, {
+          delay: sevenDaysToMs,
+        });
+
+        return data;
       });
 
-      return data;
-    });
-    
     emitter.emit('newRequest', request);
     return request;
   }

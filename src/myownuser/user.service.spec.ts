@@ -38,6 +38,7 @@ describe('Unit tests for Service', () => {
       // jest
       //   .spyOn(userRepo, 'simpleGet')
       //   .mockImplementation(async (id: number) => val);
+
       const userPayload = await userRepo.getById(1);
 
       const orderPayload = await orderRepo.getSomething();
