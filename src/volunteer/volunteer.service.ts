@@ -5,6 +5,7 @@ import { AwsBucketFolders } from 'src/types';
 import { AwsService } from 'src/services';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
+import { emitter } from 'src/utils/emitter';
 
 @Injectable()
 export class VolunteerService {
@@ -53,6 +54,7 @@ export class VolunteerService {
         return data;
       });
 
+    emitter.emit('newRequest', request);
     return request;
   }
 }

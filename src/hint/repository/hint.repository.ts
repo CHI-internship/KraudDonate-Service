@@ -64,7 +64,7 @@ export default class HintRepository extends Repository {
   }
 
   async createHint(hint: ICreateHint, user_id: number) {
-    await this.prismaService.$transaction(async (tx) => {
+    return this.prismaService.$transaction(async (tx) => {
       const newHint = await tx.volunteer_hint
         .create({
           data: {
@@ -79,8 +79,8 @@ export default class HintRepository extends Repository {
       if (hint.photo?.length) {
         await this.createHintPhoto(hint.photo, newHint.id, tx);
       }
+      return newHint;
     });
-    return 'success';
   }
 
   async createHintPhoto(photos: string[], hint_id: number, tx) {
@@ -106,8 +106,8 @@ export default class HintRepository extends Repository {
   }
 
   async updateHintById(id: number, hint: IUpdateHint) {
-    await this.prismaService.$transaction(async (tx) => {
-      await tx.volunteer_hint
+    return this.prismaService.$transaction(async (tx) => {
+      const updateHint = await tx.volunteer_hint
         .update({
           where: {
             id,
@@ -123,8 +123,8 @@ export default class HintRepository extends Repository {
       if (hint.photo?.length) {
         await this.updateHintPhotoById(id, hint.photo, tx);
       }
+      return updateHint;
     });
-    return 'success';
   }
 
   async updateHintPhotoById(hintId: number, photos: string[], tx) {

@@ -4,16 +4,20 @@ import {
   Get,
   Param,
   Post,
+  Sse,
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
+import { Observable, map, Subject } from 'rxjs';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { VolunteerRequestsService } from './volunteer-requests.service';
 import { ApproveRequestDto } from './dto/approve-request.dto';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AjvValidationPipe } from '../../utils/validator/validation';
-import { ApproveRequestSchema } from '../../utils/validator/admin/approve-request/approve-request.schema';
+import { AjvValidationPipe } from 'src/utils/validator/validation';
+import { ApproveRequestSchema } from 'src/utils/validator/admin/approve-request/approve-request.schema';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { RolesGuard } from '../../auth/guards/roles.guard';
+import { MessageEvent } from 'src/types';
+import { emitter } from 'src/utils/emitter';
 
 @ApiTags('Admin/requests')
 @Controller('admin/requests')
@@ -26,6 +30,19 @@ export class VolunteerRequestsController {
   @Roles('admin')
   async getRequests() {
     return this.volunteerRequestsService.getRequests();
+  }
+
+  @ApiResponse({
+    status: 200,
+    description: 'Get new requests after creation (Sse)',
+  })
+  @Sse('sse') //not protected
+  async getRequestsSse(): Promise<Observable<MessageEvent>> {
+    const subject$ = new Subject();
+    emitter.on('newRequest', function (request) {
+      subject$.next({ request });
+    });
+    return subject$.pipe(map((data: MessageEvent): MessageEvent => ({ data })));
   }
 
   @ApiResponse({ status: 200, description: 'Get single request from DB' })

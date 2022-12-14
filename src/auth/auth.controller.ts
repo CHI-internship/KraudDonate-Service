@@ -1,18 +1,10 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Post,
-  Req,
-  UsePipes,
-} from '@nestjs/common';
+import { Body, Controller, Post, UsePipes } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AjvValidationPipe } from 'src/utils/validator/validation';
 import { CreateUserSchema, LoginUserSchema } from '../utils/validator/user';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AuthHandleService } from '../services';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 
 @ApiTags('Authorization')
