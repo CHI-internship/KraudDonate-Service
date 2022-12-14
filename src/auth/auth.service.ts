@@ -41,7 +41,6 @@ export class AuthService {
 
   async login(credentials: LoginUserDto) {
     const registeredUser = await this.userService.getByEmail(credentials.email);
-    console.log(registeredUser);
     if (!registeredUser) {
       throw new BadRequestException('Something wrong');
     }

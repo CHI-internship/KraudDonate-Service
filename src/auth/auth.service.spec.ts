@@ -97,10 +97,12 @@ describe('AuthService', () => {
 
       const result = await authService.login(loginUserDataMock);
 
-      expect(result).toEqual({
+      const expectedResult = {
         accessToken: expect.any(String),
         refreshToken: expect.any(String),
-      });
+      };
+
+      expect(result).toEqual(expectedResult);
     });
 
     it('should throw BadRequestException "Something wrong", when user not found', async () => {
@@ -146,10 +148,12 @@ describe('AuthService', () => {
 
       const result = await authService.register(createUserDataMock);
 
-      expect(result).toEqual({
+      const expectedResult = {
         accessToken: expect.any(String),
         refreshToken: expect.any(String),
-      });
+      };
+
+      expect(result).toEqual(expectedResult);
     });
 
     it('should throw BadRequestException "Something wrong", when user exist', async () => {
@@ -200,10 +204,12 @@ describe('AuthService', () => {
 
       const result = await authService.refreshTokens(refreshTokenMock);
 
-      expect(result).toEqual({
+      const expectedResult = {
         accessToken: expect.any(String),
         refreshToken: expect.any(String),
-      });
+      };
+
+      expect(result).toEqual(expectedResult);
     });
 
     it('should throw BadRequestException, when something wrong on auth service', async () => {
