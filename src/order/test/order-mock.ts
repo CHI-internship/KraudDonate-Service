@@ -1,21 +1,20 @@
-import { AwsBucketFolders } from '../../types';
-import { CreateOrderDto } from '../dto/create-order.dto';
+import { IGetOrdersRes, IOrder, IUser } from '../../types';
 
-export const orderMock = (): CreateOrderDto => {
+export const userMock = (): IUser => {
   return {
-    title: 'Title',
-    info: 'Full info',
-    photo: 'photo-link',
-    goal_amount: 100,
-    short_info: 'Short info',
-    finished_at: '2018-03-29T13:34:00.000',
+    id: 1,
+    email: 'ordertesting@gmail.com',
+    name: 'Test',
+    lastname: 'Order',
+    role: 'volunteer',
+    photo: 'photo',
+    createdAt: new Date('2022-12-09T13:54:37.019Z'),
+    updatedAt: new Date('2022-12-09T13:54:37.019Z'),
   };
 };
 
-export const mockId = 1;
-
-export const OrderExample = {
-  id: mockId,
+export const OrderExample: IOrder = {
+  id: expect.any(Number),
   title: expect.any(String),
   info: expect.any(String),
   user_id: expect.any(Number),
@@ -29,22 +28,9 @@ export const OrderExample = {
   updatedAt: expect.any(Date),
 };
 
-export const AllOrdersResponse = {
+export const AllOrdersResponse: IGetOrdersRes = {
   page: expect.any(Number),
   limit: expect.any(Number),
   totalPages: expect.any(Number),
   data: expect.any(Array),
-};
-
-export const MockAwsService = {
-  uploadImg: jest.fn(async (base64: string, folder: AwsBucketFolders) =>
-    Promise.resolve('file location'),
-  ),
-  uploadFile: jest.fn(
-    async (base64: string, ext: string, folder: AwsBucketFolders) =>
-      Promise.resolve('file location'),
-  ),
-  deleteFile: jest.fn(async (location: string) => {
-    return Promise.resolve({ success: true });
-  }),
 };

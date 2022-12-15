@@ -1,9 +1,13 @@
 import { BadRequestException } from '@nestjs/common';
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
+import { IUserRepository } from 'src/types';
 import Repository from '../../repository/repository';
 import { UpdateUserDto } from '../dto/update-user.dto';
 
-export default class UserRepository extends Repository {
+export default class UserRepository
+  extends Repository
+  implements IUserRepository
+{
   async update({ name, lastname, image }: UpdateUserDto, userId: number) {
     const user = await this.prismaService.user
       .update({

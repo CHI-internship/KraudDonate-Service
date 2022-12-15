@@ -1,9 +1,13 @@
 import { BadRequestException } from '@nestjs/common';
+import { IOrderRepository } from 'src/types';
 import Repository from '../../repository/repository';
 import { CreateOrderDto } from '../dto/create-order.dto';
 import { UpdateOrderDto } from '../dto/update-order.dto';
 
-export default class OrderRepository extends Repository {
+export default class OrderRepository
+  extends Repository
+  implements IOrderRepository
+{
   async getAllOrders(limit: number, sort, page: number, search: string) {
     const skip = limit * (page - 1);
     const orders = await this.prismaService.order
