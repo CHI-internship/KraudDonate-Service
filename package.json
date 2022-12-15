@@ -20,6 +20,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:e2e:watch": "jest --config ./test/jest-e2e.json --watch",
     "prepare": "husky install && chmod ug+x .husky/*",
     "buildDb": "docker build -t postgresdb_main .",
     "upDb": "docker run -d --name postgresdb_main --rm -v /postgres-data:/var/lib/postgresql/data -p 6532:5432 postgresdb_main",
@@ -50,6 +51,7 @@
     "bull": "^4.10.2",
     "cors": "^2.8.5",
     "gravatar": "^1.8.2",
+    "node-mocks-http": "^1.12.1",
     "nodemailer": "^6.8.0",
     "prisma": "4.5.0",
     "react-scripts": "^5.0.1",
@@ -61,6 +63,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
+    "@golevelup/ts-jest": "^0.3.4",
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
@@ -88,6 +91,13 @@
     "typescript": "^4.7.4"
   },
   "jest": {
+    "moduleNameMapper": {
+      "^src/(.*)$": "<rootDir>/$1"
+    },
+    "moduleDirectories": [
+      "node_modules",
+      "src"
+    ],
     "moduleFileExtensions": [
       "js",
       "json",

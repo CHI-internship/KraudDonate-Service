@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import HttpService from 'src/utils/http/http.service';
+import HttpService from '../utils/http/http.service';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 
