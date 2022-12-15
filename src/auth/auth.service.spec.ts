@@ -18,7 +18,6 @@ describe('AuthService', () => {
   let httpService: HttpService;
   let userRepository: UserRepository;
   process.env.ALGORITM_DECODE_PASSWORD = 'sha256';
-  // const prismaService = new PrismaService();
 
   const createUserDataPayload = {
     email: 'test@gmail.com',
@@ -64,20 +63,6 @@ describe('AuthService', () => {
     httpService = module.get<HttpService>(HttpService);
     userRepository = module.get<UserRepository>(UserRepository);
   });
-
-  // afterEach(async () => {
-  //   const user = await prismaService.user.findUnique({
-  //     where: { email: createUserDataPayload.email },
-  //   });
-  //   if (user) {
-  //     await prismaService.user.delete({
-  //       where: {
-  //         email: createUserDataPayload.email,
-  //       },
-  //     });
-  //   }
-  //   await prismaService.$disconnect();
-  // });
 
   describe('Login', () => {
     it('should return access and refresh tokens', async () => {
