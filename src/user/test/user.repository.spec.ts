@@ -21,7 +21,7 @@ describe('UserRepository', () => {
       .catch(() => {
         return;
       });
-  }, 10000);
+  }, 30000);
 
   afterAll(async () => {
     await prismaService.user
@@ -30,7 +30,7 @@ describe('UserRepository', () => {
         return;
       });
     await prismaService.$disconnect();
-  }, 10000);
+  }, 30000);
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({

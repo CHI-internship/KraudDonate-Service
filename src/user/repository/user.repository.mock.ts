@@ -1,5 +1,5 @@
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
-import Repository from 'src/repository/repository';
+import Repository from '../../repository/repository';
 import { IUser, IUserRerository } from 'src/types';
 import { UpdateUserDto } from 'src/user/dto/update-user.dto';
 
