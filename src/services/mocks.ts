@@ -1,5 +1,7 @@
 import { AwsBucketFolders } from 'src/types';
+import { IAuthHandleService } from 'src/types/auth-handle-service.interface';
 import { IAwsService } from 'src/types/aws.interface';
+import { userMock } from '../user/repository/user.repository.mock';
 
 export class MockAwsService implements IAwsService {
   s3: any;
@@ -11,5 +13,11 @@ export class MockAwsService implements IAwsService {
   }
   deleteFile(location: string) {
     return Promise.resolve({ success: true });
+  }
+}
+
+export class MockAuthHandleService implements IAuthHandleService {
+  getPayload(rawToken?: string) {
+    return userMock();
   }
 }

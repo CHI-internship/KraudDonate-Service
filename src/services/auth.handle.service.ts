@@ -1,8 +1,9 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { IAuthHandleService } from 'src/types/auth-handle-service.interface';
 
 @Injectable()
-export class AuthHandleService {
+export class AuthHandleService implements IAuthHandleService {
   constructor(private readonly jwtService: JwtService) {}
 
   getPayload(rawToken?: string) {
