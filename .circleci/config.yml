@@ -24,6 +24,12 @@ jobs:
           POSTGRES_DB: postgresdb_main
     steps:
       - checkout
+      - run:
+          name: Up Db
+          command: npm run upDb
+      - run:
+          name: Make Tests
+          command: npm run test
 workflows:
   node-tests:
     jobs:
