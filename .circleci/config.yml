@@ -3,12 +3,10 @@ orbs:
   node: circleci/node@3.0.0
   docker: circleci/docker@1.5.0
 jobs:
-  build-and-lint-project:
+  install-and-lint-project:
     executor:
       name: node/default
       tag: '16.17.1'
-    docker:
-      image: circleci/postgres:14.0
     steps:
       - checkout
       - node/install-packages:
@@ -17,20 +15,30 @@ jobs:
       - run:
           name: Lint project
           command: npm run lint:fix
+
+  up Db and make tests:
+    executor:
+      name: node/default
+      tag: '16.17.1'
+    steps:
+      - checkout
       - run:
-          name: Docker up
-          command: npm run upDb
+        name: Docker up
+        command: npm run upDb
       - run:
-          name: Test project
-          command: npm run test
+        name: Test project
+        command: npm run test
 workflows:
   node-tests:
     jobs:
-      - build-and-lint-project:
+      - install-and-lint-project:
           filters:
             branches:
               only:
                 - dev
                 - master
                 - feature/circleCi
+      - up Db and make tests:
+        requires:
+          - install-and-lint-project
 
