@@ -17,7 +17,7 @@ jobs:
           command: npm run lint:fix
   database Up:
     docker:
-      - image: cimg/postgres:15.1.0
+      - image: cimg/postgres:15.1.0-postgis
     steps:
       - checkout
 workflows:
