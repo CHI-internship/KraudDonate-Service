@@ -24,7 +24,9 @@ jobs:
           POSTGRES_DB: postgresdb_main
     steps:
       - checkout
-      - echo 'Hello World'
+      - run:
+          name: Up Db
+          command: echo "Hello"
 workflows:
   node-tests:
     jobs:
