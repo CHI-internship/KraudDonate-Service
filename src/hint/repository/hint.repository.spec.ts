@@ -7,6 +7,21 @@ describe('Hint Repository', () => {
   let hintRepository: HintRepository;
   const prismaService = new PrismaService();
 
+  beforeAll(async () => {
+    await prismaService.volunteer_hint
+      .create({
+        data: {
+          id: hintMock().id,
+          title: hintMock().title,
+          info: hintMock().info,
+          user_id: hintMock().user_id,
+        },
+      })
+      .catch(() => {
+        return;
+      });
+  });
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [PrismaService, HintRepository],
@@ -56,6 +71,14 @@ describe('Hint Repository', () => {
     test('should create hint', async () => {
       const updateHint = await hintRepository.updateHintById(2, hint);
       expect(updateHint).toMatchObject(HintMatchingObject);
+    });
+  });
+
+  afterAll(async () => {
+    await prismaService.volunteer_hint.delete({
+      where: {
+        id: hintMock().id,
+      },
     });
   });
 });
