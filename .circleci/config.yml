@@ -18,11 +18,5 @@ jobs:
 workflows:
   node-tests:
     jobs:
-      - build-and-lint-project:
-          filters:
-            branches:
-              only:
-                - dev
-                - master
-                - feature/circleCi
+      - build-and-lint-project
 
