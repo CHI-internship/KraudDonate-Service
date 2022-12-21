@@ -20,7 +20,6 @@ jobs:
     steps:
       - setup_remote_docker
       - checkout
-      - docker/login
 workflows:
   node-tests:
     jobs:
