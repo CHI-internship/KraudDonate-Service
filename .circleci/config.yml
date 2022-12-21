@@ -16,6 +16,9 @@ jobs:
           name: Lint project
           command: npm run lint
       - run:
+          name: Docker up
+          command: npm run upDb
+      - run:
           name: Test project
           command: npm run test
 workflows:
