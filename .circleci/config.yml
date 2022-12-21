@@ -51,7 +51,6 @@ workflows:
                 - dev
                 - master
                 - feature/circleCi
-                - feature/e2e_hint
       - build-and-push-image:
           requires:
             - build-and-lint-project
