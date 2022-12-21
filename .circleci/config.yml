@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
-  node: circleci/node@3.0.0
-  docker: circleci/docker@1.5.0
+  node: circleci/node@5.0.3
+  docker: circleci/docker@2.2.0
 jobs:
   build-and-lint-project:
     executor:
@@ -27,6 +27,9 @@ jobs:
       - run:
           name: Up Db
           command: npm run buildDb
+      - run:
+          name: Make Tests
+          command: npm run test
 workflows:
   node-tests:
     jobs:
