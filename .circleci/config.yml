@@ -6,7 +6,7 @@ jobs:
   build-and-lint-project:
     executor:
       name: node/default
-      tag: '14.15.4'
+      tag: '16.17.1'
     steps:
       - checkout
       - node/install-packages:
