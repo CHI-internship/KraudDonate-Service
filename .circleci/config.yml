@@ -7,12 +7,6 @@ jobs:
     executor:
       name: node/default
       tag: '16.17.1'
-    docker:
-      - image: circleci/postgres
-        environment:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgresdb_main
     steps:
       - checkout
       - node/install-packages:
@@ -21,6 +15,15 @@ jobs:
       - run:
           name: Lint project
           command: npm run lint:fix
+  database Up:
+    docker:
+      - image: circleci/postgres
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgresdb_main
+    steps:
+      - checkout
       - run:
           name: Up Db
           command: npm run upDb
@@ -31,4 +34,7 @@ workflows:
   node-tests:
     jobs:
       - build-and-lint-project
+      - database Up:
+          requires:
+            - build-and-lint-project
 
