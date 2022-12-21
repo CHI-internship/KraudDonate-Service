@@ -7,15 +7,6 @@ jobs:
     executor:
       name: node/default
       tag: '16.17.1'
-    steps:
-      - checkout
-      - node/install-packages:
-          cache-path: ~/KraudDonate-Service/node_modules
-          override-ci-command: npm install
-      - run:
-          name: Lint project
-          command: npm run lint:fix
-  database Up:
     docker:
       - image: circleci/postgres
         environment:
@@ -24,6 +15,12 @@ jobs:
           POSTGRES_DB: postgresdb_main
     steps:
       - checkout
+      - node/install-packages:
+          cache-path: ~/KraudDonate-Service/node_modules
+          override-ci-command: npm install
+      - run:
+          name: Lint project
+          command: npm run lint:fix
       - run:
           name: Up Db
           command: npm run upDb
@@ -34,5 +31,4 @@ workflows:
   node-tests:
     jobs:
       - build-and-lint-project
-      - database Up
 
