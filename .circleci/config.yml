@@ -1,23 +1,20 @@
 version: 2.1
-orbs:
-  node: circleci/node@3.0.0
-  docker: circleci/docker@1.5.0
 jobs:
   build-and-lint-project:
-    executor:
-      name: node/default
-      tag: '14.15.4'
+    docker:
+      -image: circleci/node:16.17.1
     steps:
       - checkout
-      - node/install-packages:
-          cache-path: ~/project/node_modules
-          override-ci-command: npm install
+      - restore_cache:
+          key: dependency-cache-{{ .Branch}}-{{ checksum "package.json }}
       - run:
-          name: Lint project
-          command: npm run lint
-      - run:
-          name: Build project
-          command: npm run build
+          name: Install Dependencies
+          command: |
+            npm i
+      - save_cache:
+          key: dependency-cache-{{ .Branch}}-{{ checksum "package.json }}
+          paths:
+            - "node_modules"
 workflows:
   node-tests:
     jobs:
