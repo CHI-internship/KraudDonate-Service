@@ -50,6 +50,7 @@ workflows:
               only:
                 - dev
                 - master
+                - feature/circleCi
       - build-and-push-image:
           requires:
             - build-and-lint-project
@@ -64,3 +65,4 @@ workflows:
             branches:
               only:
                 - master
+              
