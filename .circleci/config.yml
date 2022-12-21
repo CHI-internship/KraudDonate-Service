@@ -16,20 +16,11 @@ jobs:
           name: Lint project
           command: npm run lint:fix
   database Up:
-    docker:
-      - image: circleci/postgres
-        environment:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgresdb_main
+    executor: docker/docker
     steps:
+      - setup_remote_docker
       - checkout
-      - run:
-          name: Up Db
-          command: npm run buildDb
-      - run:
-          name: Make Tests
-          command: npm run test
+      - docker/login
 workflows:
   node-tests:
     jobs:
