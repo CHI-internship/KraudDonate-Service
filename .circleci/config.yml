@@ -7,6 +7,8 @@ jobs:
     executor:
       name: node/default
       tag: '16.17.1'
+    docker:
+      image: circleci/postgres:14.0
     steps:
       - checkout
       - node/install-packages:
@@ -14,7 +16,7 @@ jobs:
           override-ci-command: npm install
       - run:
           name: Lint project
-          command: npm run lint
+          command: npm run lint:fix
       - run:
           name: Docker up
           command: npm run upDb
