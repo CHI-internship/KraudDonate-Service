@@ -1,7 +1,7 @@
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
-import Repository from 'src/repository/repository';
-import { IUser, IUserRerository } from 'src/types';
 import { UpdateUserDto } from 'src/user/dto/update-user.dto';
+import Repository from '../../repository/repository';
+import { IUser, IUserRerository } from '../../types';
 
 export const userMock = (): IUser => {
   return {
