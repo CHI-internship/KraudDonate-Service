@@ -26,7 +26,7 @@ jobs:
       - checkout
       - run:
           name: Up Db
-          command: echo "Hello"
+          command: npm run buildDb
 workflows:
   node-tests:
     jobs:
