@@ -17,7 +17,11 @@ jobs:
           command: npm run lint:fix
   database Up:
     docker:
-      - image: cimg/postgres:15.1.0-postgis
+      - image: circleci/postgres:15.1.0
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgresdb_main
     steps:
       - checkout
 workflows:
