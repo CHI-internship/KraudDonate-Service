@@ -3,8 +3,12 @@ import { ICreateHint, IQueryParams, IUpdateHint } from '../interfaces';
 import { AwsService } from '../../services';
 import { AwsBucketFolders } from '../../types';
 import Repository from '../../repository/repository';
+import { IHintRepository } from './interfaces/hint.repository.interface';
 
-export default class HintRepository extends Repository {
+export default class HintRepository
+  extends Repository
+  implements IHintRepository
+{
   private awsService = new AwsService();
 
   async getAllHints(params: IQueryParams) {

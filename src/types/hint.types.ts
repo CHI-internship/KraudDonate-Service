@@ -13,3 +13,10 @@ interface IHintPhoto {
   hint_id: number;
   createdAt: Date;
 }
+
+export interface IHints {
+  page: number;
+  limit: number;
+  totalPages: number;
+  data: IHint[];
+}

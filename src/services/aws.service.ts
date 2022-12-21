@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { S3 } from 'aws-sdk';
-import { AwsBucketFolders } from 'src/types';
+import { AwsBucketFolders, IMultipleUploadFiles } from 'src/types';
+import { IAwsService } from 'src/types/aws.interface';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
-export class AwsService {
+export class AwsService implements IAwsService {
   s3: S3.ClientConfiguration | any;
   constructor() {
     this.s3 = new S3({
@@ -57,10 +58,27 @@ export class AwsService {
     return res.Location;
   }
 
+  async uploadMultipleFiles(
+    files: IMultipleUploadFiles[],
+    folder: AwsBucketFolders,
+  ) {
+    const locationsArray: string[] = [];
+    Promise.all(
+      files.map(async (file) => {
+        const document = await this
+          .uploadFile(file.base64File, file.ext, folder)
+          .catch(() => {
+            throw new BadRequestException('Files were not downloaded.');
+          })
+        locationsArray.push(document);
+      }));
+    return locationsArray;
+  }
+
   async deleteFile(location: string) {
     const key = `${location.split('/').reverse()[1]}/${
       location.split('/').reverse()[0]
-    }`;
+      }`;
     const params = {
       Bucket: process.env.AWS_BUCKET_NAME,
       Key: key,
@@ -68,5 +86,13 @@ export class AwsService {
     await this.s3.deleteObject(params, (err, data) => {
       if (err) console.log(err);
     });
+
+    return { success: true };
+  }
+
+  async deleteMultipleFiles(locations: string[]) {
+    for (let i = 0; i < locations.length; i++) {
+      await this.deleteFile(locations[i]);
+    }
   }
 }

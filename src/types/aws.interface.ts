@@ -1,13 +1,16 @@
-import { S3 } from 'aws-sdk';
-import { AwsBucketFolders } from './aws-bucket-folders.enum';
+import { AwsBucketFolders, IMultipleUploadFiles } from './aws.types';
 
-export abstract class IAwsService {
-  s3: S3.ClientConfiguration | any;
-  abstract uploadImg(base64: string, folder: AwsBucketFolders): Promise<string>;
-  abstract uploadFile(
+export interface IAwsService {
+  uploadImg(base64: string, folder: AwsBucketFolders): Promise<string>;
+  uploadFile(
     base64: string,
     expansion: string,
     folder: AwsBucketFolders,
   ): Promise<string>;
-  abstract deleteFile(location: string): Promise<{ success: boolean }>;
+  deleteFile(location: string): Promise<{ success: boolean }>;
+  deleteMultipleFiles(locations: string[]): void;
+  uploadMultipleFiles(
+    files: IMultipleUploadFiles[],
+    folder: AwsBucketFolders,
+  ): Promise<string[]>;
 }

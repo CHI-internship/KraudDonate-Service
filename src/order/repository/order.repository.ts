@@ -1,37 +1,48 @@
 import { BadRequestException } from '@nestjs/common';
-import { IOrderRepository } from 'src/types';
-import Repository from '../../repository/repository';
+import Repository from 'src/repository/repository';
 import { CreateOrderDto } from '../dto/create-order.dto';
 import { UpdateOrderDto } from '../dto/update-order.dto';
+import { OrderByCase } from '../order.service';
+import { OrderFiltersType } from '../../types/order-filters.type';
+import { IOrderRepository } from 'src/types';
 
 export default class OrderRepository
   extends Repository
   implements IOrderRepository
 {
-  async getAllOrders(limit: number, sort, page: number, search: string) {
-    const skip = limit * (page - 1);
+  async getAllOrders(filters: OrderFiltersType, orderByCase: OrderByCase) {
+    const skip = filters.limit * (filters.page - 1);
+
     const orders = await this.prismaService.order
       .findMany({
         skip,
-        take: limit,
-        orderBy: {
-          id: sort,
-        },
+        take: filters.limit,
+        orderBy: orderByCase,
         where: {
+          status: filters.status,
           title: {
-            contains: search,
+            contains: filters.search,
           },
         },
       })
       .catch(() => {
         throw new BadRequestException('Something went wrong');
       });
-    const totalPages = Math.round(
-      (await this.prismaService.order.findMany()).length / limit,
-    );
+
+    const ordersCount = await this.prismaService.order.count({
+      where: {
+        status: filters.status,
+        title: {
+          contains: filters.search,
+        },
+      },
+    });
+
+    const totalPages = Math.ceil(ordersCount / filters.limit);
+
     return {
-      page,
-      limit,
+      page: filters.page,
+      limit: filters.limit,
       totalPages,
       data: orders,
     };

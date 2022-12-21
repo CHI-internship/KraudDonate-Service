@@ -1,8 +1,12 @@
-import Repository from 'src/repository/repository';
-import { GetVolunteerDto } from '../dto/get-Volunteer.dto';
 import { BadRequestException } from '@nestjs/common';
+import { CreateRequestDto } from '../dto/create-request.dto';
+import Repository from '../../repository/repository';
+import IVolunteerRepository from './interface';
 
-export default class VolunteerRepository extends Repository {
+export default class VolunteerRepository
+  extends Repository
+  implements IVolunteerRepository
+{
   async getRequestById(userId: number) {
     return this.prismaService.volunteer_activation_request
       .findFirst({
@@ -15,14 +19,14 @@ export default class VolunteerRepository extends Repository {
       });
   }
 
-  async createRequest(volunteerRequest: GetVolunteerDto) {
+  async createRequest(volunteerRequest: CreateRequestDto) {
     return this.prismaService.volunteer_activation_request
       .create({
         data: {
           country: volunteerRequest.country,
           city: volunteerRequest.city,
           card_number: volunteerRequest.cardNumber,
-          document: volunteerRequest.document,
+          documents: volunteerRequest.documents,
           userId: volunteerRequest.userId,
         },
       })

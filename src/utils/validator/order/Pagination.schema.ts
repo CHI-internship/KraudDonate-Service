@@ -19,6 +19,9 @@ export const PaginationSchema: JSONSchemaType<PaginationDto> = {
     search: {
       type: 'string',
     },
+    status: {
+      type: 'string',
+    },
   },
   required: ['page', 'limit'],
   additionalProperties: false,

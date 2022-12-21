@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IBase64Documents } from 'src/types';
 
 export class GetVolunteerDto {
   @ApiProperty({
@@ -25,16 +26,9 @@ export class GetVolunteerDto {
   @ApiProperty({
     example: 'passport photo',
     description: 'passport photo',
-    type: String,
+    type: Array,
   })
-  document: string;
-
-  @ApiProperty({
-    example: 'pdf',
-    description: 'expansion of document',
-    type: String,
-  })
-  expansion: string;
+  documents: IBase64Documents[];
 
   @ApiProperty({
     example: 1,

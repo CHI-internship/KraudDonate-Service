@@ -23,14 +23,14 @@ export default class VolunteerRequestsRepository extends Repository {
       });
   }
 
-  async approveRequest(approveRequest: ApproveRequestDto) {
+  async changeRequestStatus(dto: ApproveRequestDto) {
     return this.prismaService.volunteer_activation_request
       .update({
         where: {
-          userId: approveRequest.userId,
+          userId: dto.userId,
         },
         data: {
-          status: approveRequest.status,
+          status: dto.status,
         },
       })
       .catch(() => {

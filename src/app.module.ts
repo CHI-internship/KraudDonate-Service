@@ -16,7 +16,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { RecaptchaMiddleware } from './middlewares/recaptcha.middleware';
 import { RecaptchaService } from './utils/recaptcha';
 import { VolunteerRequestModule } from './admin/volunteer-requests/volunteer-request.module';
-import { MailerModule } from '@nestjs-modules/mailer';
 import { OrderModule } from './order/order.module';
 import { HintModule } from './hint/hint.module';
 import { StripeModule } from './stripe/stripe.module';
@@ -36,12 +35,6 @@ import { LoggerMiddleware } from './middlewares/req.logger';
     HttpModule,
     OrderModule,
     VolunteerRequestModule,
-    MailerModule.forRoot({
-      transport: {
-        host: 'smtp.sendgrid.net',
-        auth: { user: 'apikey', pass: process.env.MAIL_PASSWORD },
-      },
-    }),
     HintModule,
     StripeModule,
     BullModule.forRoot({

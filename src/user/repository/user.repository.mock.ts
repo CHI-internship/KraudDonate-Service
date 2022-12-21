@@ -1,8 +1,9 @@
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
-import { IUser, IUserRepository } from 'src/types';
+import Repository from 'src/repository/repository';
+import { IUser, IUserRerository } from 'src/types';
 import { UpdateUserDto } from 'src/user/dto/update-user.dto';
 
-const userMock = (): IUser => {
+export const userMock = (): IUser => {
   return {
     id: 1,
     email: 'email@gmail.com',
@@ -15,7 +16,7 @@ const userMock = (): IUser => {
   };
 };
 
-export class MockUserRepository implements IUserRepository {
+export class MockUserRepository extends Repository implements IUserRerository {
   update(updateUserDto: UpdateUserDto, userId: number) {
     return Promise.resolve(userMock());
   }

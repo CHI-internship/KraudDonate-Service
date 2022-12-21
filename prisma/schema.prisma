@@ -1,24 +1,25 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["interactiveTransactions"]
 }
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id                    Int      @id @default(autoincrement())
-  email                 String   @unique
-  name                  String
-  lastname              String
-  role                  Role     @default(customer)
-  photo                 String?
-  orders                Order[]
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-  volunteer             Volunteer_activation_request?
-  volunteer_hints       Volunteer_hint[]
+  id              Int                           @id @default(autoincrement())
+  email           String                        @unique
+  name            String
+  lastname        String
+  role            Role                          @default(customer)
+  photo           String?
+  orders          Order[]
+  createdAt       DateTime                      @default(now())
+  updatedAt       DateTime                      @updatedAt
+  volunteer       Volunteer_activation_request?
+  volunteer_hints Volunteer_hint[]
 }
 
 model Admin {
@@ -48,32 +49,32 @@ model Order {
 }
 
 model Volunteer_activation_request {
-  id          Int      @id @default(autoincrement())
+  id          Int                    @id @default(autoincrement())
   country     String
   city        String
   card_number String
-  document    String
-  user        User @relation(fields: [userId], references: [id])
-  userId      Int  @unique
-  status      Boolean?
+  documents   String[]
+  user        User                   @relation(fields: [userId], references: [id])
+  userId      Int                    @unique
+  status      VolunteerRequestStatus @default(open)
 }
 
 model Volunteer_hint {
-  id          Int      @id @default(autoincrement())
-  title       String
-  info        String
-  user        User     @relation(fields: [user_id], references: [id])
-  user_id     Int
-  hint_photo  Volunteer_hint_photo[]
-  createdAt   DateTime @default(now())
+  id         Int                    @id @default(autoincrement())
+  title      String
+  info       String
+  user       User                   @relation(fields: [user_id], references: [id])
+  user_id    Int
+  hint_photo Volunteer_hint_photo[]
+  createdAt  DateTime               @default(now())
 }
 
 model Volunteer_hint_photo {
-  id          Int      @id @default(autoincrement())
-  photo       String
-  hint        Volunteer_hint     @relation(fields: [hint_id], references: [id])
-  hint_id     Int
-  createdAt   DateTime @default(now())
+  id        Int            @id @default(autoincrement())
+  photo     String
+  hint      Volunteer_hint @relation(fields: [hint_id], references: [id])
+  hint_id   Int
+  createdAt DateTime       @default(now())
 }
 
 enum Role {
@@ -84,4 +85,10 @@ enum Role {
 enum Status {
   open
   closed
+}
+
+enum VolunteerRequestStatus {
+  open
+  rejected
+  approved
 }

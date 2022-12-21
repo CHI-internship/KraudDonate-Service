@@ -1,5 +1,7 @@
 import { CreateOrderDto } from 'src/order/dto/create-order.dto';
 import { UpdateOrderDto } from 'src/order/dto/update-order.dto';
+import { OrderByCase } from 'src/order/order.service';
+import { OrderFiltersType } from './order-filters.type';
 
 export interface IOrder {
   id: number;
@@ -25,10 +27,8 @@ export interface IGetOrdersRes {
 
 export interface IOrderRepository {
   getAllOrders(
-    limit: number,
-    sort,
-    page: number,
-    search: string,
+    filters: OrderFiltersType,
+    orderByCase: OrderByCase,
   ): Promise<IGetOrdersRes | null>;
 
   getOrderById(id: number): Promise<IOrder | null>;

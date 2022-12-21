@@ -18,23 +18,25 @@ export const GetVolunteerSchema: JSONSchemaType<GetVolunteerDto> = {
       type: 'string',
       minLength: 8,
     },
-    document: {
-      type: 'string',
+    documents: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          base64File: {
+            type: 'string',
+          },
+          ext: {
+            type: 'string',
+          },
+        },
+        required: ['base64File', 'ext'],
+      },
     },
     userId: {
       type: 'integer',
     },
-    expansion: {
-      type: 'string',
-    },
   },
-  required: [
-    'userId',
-    'city',
-    'cardNumber',
-    'country',
-    'document',
-    'expansion',
-  ],
+  required: ['userId', 'city', 'cardNumber', 'country', 'documents'],
   additionalProperties: false,
 };

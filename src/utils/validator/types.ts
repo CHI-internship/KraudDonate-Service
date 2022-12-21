@@ -16,6 +16,7 @@ import { IdDto } from './dto/id.dto';
 import { CreateHintDto } from './dto/create-hint.dto';
 import { DonateDto } from './dto/donate.dto';
 import { UpdateSumDto } from './dto/update-sum.dto';
+import { SortOrdersDto } from './dto/sortOrders.dto';
 
 export type SchemaType =
   | CreateUserDto
@@ -35,4 +36,5 @@ export type SchemaType =
   | IdDto
   | CreateHintDto
   | DonateDto
-  | UpdateSumDto;
+  | UpdateSumDto
+  | SortOrdersDto;

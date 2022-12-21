@@ -3,8 +3,16 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import OrderRepository from '../order/repository/order.repository';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { AwsBucketFolders } from '../types';
-import { AwsService } from '../services/aws.service';
+import { AwsBucketFolders } from 'src/types';
+import { AwsService } from 'src/services';
+import { OrderFiltersType } from '../types/order-filters.type';
+
+export interface OrderByCase {
+  title?: any;
+  sum?: any;
+  finished_at?: any;
+  createdAt?: any;
+}
 
 @Injectable()
 export class OrderService {
@@ -14,8 +22,28 @@ export class OrderService {
     private userService: UserService,
   ) {}
 
-  async getAllOrders(limit: number, sort, page: number, search: string) {
-    return this.orderRepository.getAllOrders(limit, sort, page, search);
+  async getAllOrders(params: OrderFiltersType) {
+    let orderByCase: OrderByCase;
+
+    switch (params.sortBy) {
+      case 'name':
+        orderByCase = { title: params.sort };
+        break;
+      case 'popularity':
+        orderByCase = { sum: params.sort };
+        break;
+      case 'remain':
+        orderByCase = { finished_at: params.sort };
+        break;
+      case 'date':
+        orderByCase = { createdAt: params.sort };
+        break;
+      default:
+        orderByCase = {};
+        break;
+    }
+
+    return this.orderRepository.getAllOrders(params, orderByCase);
   }
 
   async getOrderById(id: number) {

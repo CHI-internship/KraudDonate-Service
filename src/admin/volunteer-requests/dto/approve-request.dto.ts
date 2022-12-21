@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { VolunteerRequestStatus } from 'src/types';
 
 export class ApproveRequestDto {
   @ApiProperty({
@@ -11,9 +12,9 @@ export class ApproveRequestDto {
   @ApiProperty({
     example: 'true or false',
     description: 'status of request',
-    type: Boolean,
+    type: String,
   })
-  status: boolean;
+  status: VolunteerRequestStatus;
 
   @ApiProperty({
     example: 'Reject',

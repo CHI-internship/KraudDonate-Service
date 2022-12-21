@@ -1,12 +1,12 @@
 import { BadRequestException } from '@nestjs/common';
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
-import { IUserRepository } from 'src/types';
-import Repository from '../../repository/repository';
+import { IUserRerository } from 'src/types';
 import { UpdateUserDto } from '../dto/update-user.dto';
+import Repository from '../../repository/repository';
 
 export default class UserRepository
   extends Repository
-  implements IUserRepository
+  implements IUserRerository
 {
   async update({ name, lastname, image }: UpdateUserDto, userId: number) {
     const user = await this.prismaService.user
@@ -32,7 +32,7 @@ export default class UserRepository
         include: { volunteer: true, orders: true },
       })
       .catch(() => {
-        throw new BadRequestException('Something went wrong');
+        throw new BadRequestException('User not found');
       });
 
     return user;
@@ -46,9 +46,8 @@ export default class UserRepository
         },
       })
       .catch(() => {
-        throw new BadRequestException('Something went wrong');
+        throw new BadRequestException('User not found');
       });
-
     return user;
   }
 
@@ -61,7 +60,7 @@ export default class UserRepository
         include: { volunteer: true, orders: true },
       })
       .catch(() => {
-        throw new BadRequestException('Something went wrong');
+        throw new BadRequestException('User not found');
       });
 
     return user;

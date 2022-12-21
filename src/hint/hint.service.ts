@@ -3,14 +3,12 @@ import HintRepository from './repository/hint.repository';
 import { UserService } from '../user/user.service';
 import { CreateHintDto } from './dto/create-hint.dto';
 import { UpdateHintDto } from './dto/update-hint.dto';
-import { AwsService } from '../services';
 
 @Injectable()
 export class HintService {
   constructor(
     private hintRepository: HintRepository,
     private userService: UserService,
-    private awsService: AwsService,
   ) {}
 
   async getAllHints(limit: number, sort: string, page: number, search: string) {
@@ -19,10 +17,6 @@ export class HintService {
 
   async getHintById(id: number) {
     return this.hintRepository.getHintById(id);
-  }
-
-  async getAllPhotosByHintId(hintId: number) {
-    return this.hintRepository.getAllPhotosByHintId(hintId);
   }
 
   async createHint(hint: CreateHintDto, email: string) {

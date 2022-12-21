@@ -6,9 +6,10 @@ import VolunteerRequestsRepository from './repository/volunteer-requests.reposit
 import UserRepository from 'src/user/repository/user.repository';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
+import { MailModule } from '../../utils/mail/mail.module';
 
 @Module({
-  imports: [],
+  imports: [MailModule],
   controllers: [VolunteerRequestsController],
   providers: [
     VolunteerRequestsService,
@@ -19,5 +20,6 @@ import { JwtService } from '@nestjs/jwt';
     AwsService,
     JwtService,
   ],
+  exports: [VolunteerRequestsService, VolunteerRequestsRepository],
 })
 export class VolunteerRequestModule {}

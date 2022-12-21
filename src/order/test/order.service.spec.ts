@@ -11,6 +11,8 @@ import {
 import { CreateOrderDto } from '../dto/create-order.dto';
 import { UserService } from '../../user/user.service';
 import { UserModule } from '../../user/user.module';
+import { OrderFiltersType } from '../../types/order-filters.type';
+import { OrderStatusEnum } from '../../types/order-status.enum';
 
 describe('OrderService', () => {
   let orderService: OrderService;
@@ -38,8 +40,17 @@ describe('OrderService', () => {
 
   describe('Get orders', () => {
     test('Return all orders', async () => {
+      const params: OrderFiltersType = {
+        page: 1,
+        limit: 10,
+        sort: 'asc',
+        sortBy: '',
+        search: '',
+        status: 'open' as OrderStatusEnum,
+      };
+
       await orderService
-        .getAllOrders(10, 'asc', 1, '')
+        .getAllOrders(params)
         .then((data) => expect(data).toMatchObject(AllOrdersResponse))
         .catch((err) => console.log(err));
     });

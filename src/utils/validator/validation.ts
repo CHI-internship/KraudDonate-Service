@@ -8,7 +8,12 @@ import Ajv, { JSONSchemaType } from 'ajv';
 import addFormats from 'ajv-formats';
 import { SchemaType } from './types';
 import ajvErrors from 'ajv-errors';
-import { customDate, customSort, customStrNum } from './custom-formats';
+import {
+  customDate,
+  customSort,
+  customSortBy,
+  customStrNum,
+} from './custom-formats';
 
 @Injectable()
 export class AjvValidationPipe implements PipeTransform {
@@ -22,6 +27,7 @@ export class AjvValidationPipe implements PipeTransform {
       this._ajv.addFormat('custom-date', customDate);
       this._ajv.addFormat('sort', customSort);
       this._ajv.addFormat('string-num', customStrNum);
+      this._ajv.addFormat('sortBy', customSortBy);
     }
   }
 

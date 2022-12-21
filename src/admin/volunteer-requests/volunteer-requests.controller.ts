@@ -32,12 +32,15 @@ export class VolunteerRequestsController {
     return this.volunteerRequestsService.getRequests();
   }
 
-  @ApiResponse({ status: 200, description: 'Get new requests after creation (Sse)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Get new requests after creation (Sse)',
+  })
   @Sse('sse') //not protected
   async getRequestsSse(): Promise<Observable<MessageEvent>> {
     const subject$ = new Subject();
     emitter.on('newRequest', function (request) {
-      subject$.next({ request })
+      subject$.next({ request });
     });
     return subject$.pipe(map((data: MessageEvent): MessageEvent => ({ data })));
   }
@@ -50,12 +53,16 @@ export class VolunteerRequestsController {
     return this.volunteerRequestsService.getRequestById(+id);
   }
 
-  @ApiResponse({ status: 201, description: 'Approve or reject request' })
+  @ApiResponse({ status: 201, description: 'Change status request' })
   @Post()
   @UseGuards(RolesGuard)
   @Roles('admin')
   @UsePipes(new AjvValidationPipe(ApproveRequestSchema))
-  async approveRequest(@Body() approveRequest: ApproveRequestDto) {
-    return this.volunteerRequestsService.approveRequest(approveRequest);
+  async changeRequestStatus(
+    @Body() changeRequestStatusPayload: ApproveRequestDto,
+  ) {
+    return this.volunteerRequestsService.changeRequestStatus(
+      changeRequestStatusPayload,
+    );
   }
 }

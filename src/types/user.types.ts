@@ -16,7 +16,7 @@ export interface IUser {
   volunteer_hints?: IHint[] | [];
 }
 
-export interface IUserRepository {
+export interface IUserRerository {
   update(updateUserDto: UpdateUserDto, userId: number): Promise<IUser | null>;
   getById(id: number): Promise<IUser | null>;
   getByEmail(email: string): Promise<IUser | null>;

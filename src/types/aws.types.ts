@@ -4,3 +4,8 @@ export enum AwsBucketFolders {
   DOCUMENTS = 'documents',
   HINTPHOTO = 'hint-photo',
 }
+
+export interface IMultipleUploadFiles {
+  base64File: string;
+  ext: string;
+}

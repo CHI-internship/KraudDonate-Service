@@ -15,3 +15,14 @@ export const customStrNum = (num: string) => {
   if (typeof Number(num) === 'number' && Number(num) >= 1) return true;
   else return false;
 };
+
+export const customSortBy = (sortBy: string) => {
+  if (
+    sortBy === 'name' ||
+    sortBy === 'popularity' ||
+    sortBy === 'remain' ||
+    sortBy === 'date'
+  )
+    return true;
+  return false;
+};

@@ -1,13 +1,16 @@
 import {
   Body,
   Controller,
+  forwardRef,
   Get,
+  Inject,
   Patch,
   Query,
   Req,
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { UpdateUserSchema } from '../utils/validator/user';
 import { AjvValidationPipe } from '../utils/validator/validation';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -15,10 +18,10 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
-import { AuthHandleService } from '../services';
+import { AuthHandleService } from '../services/auth.handle.service';
 import { IdSchema } from '../utils/validator/order';
 import { IdDto } from '../utils/validator/dto/id.dto';
-import { Request } from 'express';
+
 @ApiTags('User')
 @Controller('user')
 export class UserController {
@@ -31,7 +34,7 @@ export class UserController {
   @Roles('volunteer', 'customer')
   @UseGuards(RolesGuard)
   @Get()
-  get(@Req() req: Request) {
+  getUser(@Req() req: Request) {
     const { email } = this.authHandleService.getPayload(
       req.headers['authorization'],
     );

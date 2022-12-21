@@ -1,41 +1,21 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { ForgotPasswordDto } from './dto/forgot-password.dto';
-import { IHttpService } from 'src/utils/http/http.interface';
-import HttpService from 'src/utils/http/http.service';
+import { Injectable } from '@nestjs/common';
+import HttpService from '../utils/http/http.service';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Injectable()
 export class PasswordService {
-  private readonly httpService: IHttpService;
-  constructor() {
-    this.httpService = new HttpService(process.env.AUTH_SERVICE_URL!);
+  constructor(private readonly httpService: HttpService) {}
+
+  forgotPassword(email: string) {
+    return this.httpService.forgotPassword(email);
   }
 
-  async forgotPassword(email: string) {
-    return await this.httpService
-      .post('/password/forgot', { email })
-      .then((data) => data.data)
-      .catch((err) => {
-        throw new BadRequestException(err.message);
-      });
+  resetPassword(resetPasswordDto: ResetPasswordDto) {
+    return this.httpService.resetPassword(resetPasswordDto);
   }
 
-  async resetPassword(resetPasswordDto: ResetPasswordDto) {
-    return await this.httpService
-      .patch('/password/reset', resetPasswordDto)
-      .then((data) => data.data)
-      .catch((err) => {
-        throw new BadRequestException(err.message);
-      });
-  }
-
-  async updatePassword(updatePasswordDto: UpdatePasswordDto) {
-    return await this.httpService
-      .patch('/password/update', updatePasswordDto)
-      .then((data) => data.data)
-      .catch((err) => {
-        throw new BadRequestException(err.message);
-      });
+  updatePassword(updatePasswordDto: UpdatePasswordDto) {
+    return this.httpService.updatePassword(updatePasswordDto);
   }
 }

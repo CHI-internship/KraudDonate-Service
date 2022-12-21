@@ -1,6 +1,9 @@
 import { CreateOrderDto } from 'src/order/dto/create-order.dto';
 import { UpdateOrderDto } from 'src/order/dto/update-order.dto';
+import Repository from 'src/repository/repository';
 import { IGetOrdersRes, IOrderRepository, IOrder } from 'src/types';
+import { OrderFiltersType } from 'src/types/order-filters.type';
+import { OrderByCase } from '../order.service';
 
 export const orderMock = (): IOrder => {
   return {
@@ -28,8 +31,11 @@ export const orderResMock = (): IGetOrdersRes => {
   };
 };
 
-export class MockOrderRepository implements IOrderRepository {
-  getAllOrders(limit: number, sort: any, page: number, search: string) {
+export class MockOrderRepository
+  extends Repository
+  implements IOrderRepository
+{
+  getAllOrders(filters: OrderFiltersType, orderByCase: OrderByCase) {
     return Promise.resolve(orderResMock());
   }
 

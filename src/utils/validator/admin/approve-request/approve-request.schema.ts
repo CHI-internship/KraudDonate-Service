@@ -8,7 +8,7 @@ export const ApproveRequestSchema: JSONSchemaType<ApproveRequestDto> = {
       type: 'integer',
     },
     status: {
-      type: 'boolean',
+      type: 'string',
     },
     message: {
       type: 'string',
