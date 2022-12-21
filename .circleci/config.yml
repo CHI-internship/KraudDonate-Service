@@ -18,9 +18,9 @@ jobs:
 
   up Db and make tests:
     executor:
-      name: node/default
-      tag: '16.17.1'
+      executor: docker/docker
     steps:
+      - setup_remote_docker
       - checkout
       - run:
         name: Docker up
