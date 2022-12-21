@@ -2,7 +2,6 @@ import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { UserModule } from '../user.module';
-import { UserService } from '../user.service';
 import { UserMatchingObject } from './user-mock';
 import { AuthHandleService, AwsService, PrismaService } from '../../services';
 import { MockAuthHandleService, MockAwsService } from '../../services/mocks';
@@ -12,7 +11,6 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 
 describe('User', () => {
   let app: INestApplication;
-  let userService: UserService;
   let newUserId: number;
 
   const prismaService = new PrismaService();
@@ -44,7 +42,6 @@ describe('User', () => {
       .useValue(mockGuard)
       .compile();
 
-    userService = moduleRef.get<UserService>(UserService);
     app = moduleRef.createNestApplication();
     await app.init();
   }, 30000);
@@ -118,10 +115,10 @@ describe('User', () => {
     it('Get /user/role-check', async () => {
       const res = await request(app.getHttpServer())
         .get('/user/role-check')
-        .send({ id: String(newUserId) });
+        .query({ id: newUserId });
 
       expect(res.status).toBe(200);
-      expect(res.body).toEqual(expect.any(Boolean));
+      expect(res.text).toEqual(expect.any(String));
     });
   });
 });
