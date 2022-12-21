@@ -3,7 +3,7 @@ orbs:
   node: circleci/node@5.0.3
   docker: circleci/docker@2.2.0
 jobs:
-  build-and-lint-project:
+  install-and-lint-project:
     executor:
       name: node/default
       tag: '16.17.1'
@@ -26,8 +26,8 @@ jobs:
 workflows:
   node-tests:
     jobs:
-      - build-and-lint-project
+      - install-and-lint-project
       - database Up:
           requires:
-            - build-and-lint-project
+            - install-and-lint-project
 
