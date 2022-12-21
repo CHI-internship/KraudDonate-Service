@@ -17,7 +17,7 @@ jobs:
           command: npm run lint:fix
   database Up:
     docker:
-      - image: circleci/postgres:15.1.0
+      - image: circleci/postgres
         environment:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
