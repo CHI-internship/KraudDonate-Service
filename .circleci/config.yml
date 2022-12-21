@@ -20,7 +20,7 @@ jobs:
     steps:
       - setup_remote_docker
       - checkout
-      - - run:
+      - run:
             name: Up Db
             command: npm run upDb
       - run:
