@@ -15,14 +15,14 @@ jobs:
       - run:
           name: Lint project
           command: npm run lint:fix
+      - run:
+          name: Make Tests
+          command: npm run test
   database Up:
     executor: docker/docker
     steps:
       - setup_remote_docker
       - checkout
-      - run:
-          name: Make Tests
-          command: npm run test
 workflows:
   node-tests:
     jobs:
