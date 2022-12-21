@@ -1,28 +1,66 @@
-
 version: 2.1
-
 orbs:
-  node: circleci/node@4.7
-
+  node: circleci/node@3.0.0
+  docker: circleci/docker@1.5.0
 jobs:
-  build-and-test:
-    docker:
-      - image: cimg/node:16.10
+  build-and-lint-project:
+    executor:
+      name: node/default
+      tag: '14.15.4'
     steps:
       - checkout
       - node/install-packages:
-          pkg-manager: npm
+          cache-path: ~/project/node_modules
+          override-ci-command: npm install
       - run:
-          name: Run tests
-          command: npm test
-
+          name: Lint project
+          command: npm run lint
+      - run:
+          name: Build project
+          command: npm run build
+  build-and-push-image:
+    executor: docker/docker
+    steps:
+      - setup_remote_docker
+      - checkout
+      - docker/check
+      - docker/build:
+          image: $DOCKER_USERNAME/$DOCKER_REPO
+          tag: latest
+      - docker/push:
+          image: $DOCKER_USERNAME/$DOCKER_REPO
+          tag: latest
+  deploy:
+    working_directory: ~/circleci-pichupido
+    machine:
+      image: ubuntu-2004:202008-01
+    steps:
+      - checkout
+      - run:
+          name: Deploy to serve
+          command: |
+            ssh -oStrictHostKeyChecking=no -v ubuntu@$HOST "sudo chmod u+x ./*"
+            ssh -oStrictHostKeyChecking=no -v ubuntu@$HOST "sudo ./deploy.sh"
 workflows:
+  node-tests:
     jobs:
-      - build-and-test:
-         filters:
-          branches:
-            only:
-              - dev
-              - master
-              - feature/circleCi
-
+      - build-and-lint-project:
+          filters:
+            branches:
+              only:
+                - dev
+                - master
+      - build-and-push-image:
+          requires:
+            - build-and-lint-project
+          filters:
+            branches:
+              only:
+                - master
+      - deploy:
+          requires:
+            - build-and-push-image
+          filters:
+            branches:
+              only:
+                - master
