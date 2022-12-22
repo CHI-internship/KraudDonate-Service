@@ -30,7 +30,7 @@ jobs:
           command: npm i
       - run:
           name: Run Linter
-          command: npm run lint
+          command: npm run lint:fix
       - run:
           name: Sync Prisma with Database
           command: npx prisma migrate dev
