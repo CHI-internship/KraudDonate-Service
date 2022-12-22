@@ -1,0 +1,22 @@
+version: 2.1
+
+parameters:
+  is_pr:
+    type: boolean
+    default: false
+
+jobs:
+  do_something:
+    docker:
+      - image: cimg/base:2021.04
+    steps:
+      - run:
+          name: something
+          command: echo 'You get the picture'
+
+workflows:
+  whence-pr:
+    when: << pipeline.parameters.is_pr >>
+    jobs:
+      - do_something:
+         name: something
