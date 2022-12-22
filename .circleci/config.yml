@@ -44,7 +44,8 @@ workflows:
   workflow_first:
     jobs:
       - check-lint-test:
-          branches:
-            only:
-              - dev
-            pull_request: true
+          filters:
+            branches:
+              only:
+                - dev
+              pull_request: true
