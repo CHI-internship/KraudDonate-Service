@@ -52,17 +52,17 @@ describe('Hint Repository', () => {
     });
   });
 
-  // describe('Create hint', () => {
-  //   const hint = {
-  //     title: 'new title',
-  //     info: 'new info',
-  //   };
-  //   test('should create hint', async () => {
-  //     const newHint = await hintRepository.createHint(hint, 5);
-  //     expect(newHint).toMatchObject(HintMatchingObject);
-  //     await prismaService.volunteer_hint.delete({ where: { id: newHint.id } });
-  //   });
-  // });
+  describe('Create hint', () => {
+    const hint = {
+      title: 'new title',
+      info: 'new info',
+    };
+    test('should create hint', async () => {
+      const newHint = await hintRepository.createHint(hint, 5);
+      expect(newHint).toMatchObject(HintMatchingObject);
+      // await prismaService.volunteer_hint.delete({ where: { id: newHint.id } });
+    });
+  });
 
   describe('Update Hint', () => {
     const hint = {
