@@ -1,36 +1,37 @@
 version: 2.1
 orbs:
-  node: circleci/node@5.0.3
-  docker: circleci/docker@2.2.0
+  node: circleci/node@5.0.2
 jobs:
-  database Up:
+  build_and_test:
+    executor: node/default
     docker:
-      - image: cimg/postgres:15.1.0
-    steps:
-        - setup_remote_docker
-        - checkout
-  install-and-lint-project:
-    executor:
-      name: node/default
-      tag: '16.17.1'
+      - image: circleci/node
+        environment:
+          DATABASE_URL: postgresql://circleci@localhost/main
+      - image: circleci/postgres
+        environment:
+          PGHOST: localhost
+          PGUSER: circleci
+          POSTGRES_USER: circleci
+          POSTGRES_DB: main
+          POSTGRES_HOST_AUTH_METHOD: trust
     steps:
       - checkout
-      - node/install-packages:
-          cache-path: ~/KraudDonate-Service/node_modules
-          override-ci-command: npm install
       - run:
-          name: Lint project
-          command: npm run lint:fix
-
-
-#      - run:
-#          name: Make Tests
-#          command: npm run test
+          name: Wait for db to run
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - node/install:
+          node-version: "16.15.1"
+      - run:
+          command: npm i
+          name: Run installation of packages
+      - run:
+          command: npx prisma migrate dev
+          name: Sync Prisma with Database
+      - run:
+          command: npm run test
+          name: Run tests
 workflows:
-  node-tests:
+  my-custom-workflow:
     jobs:
-      - database Up
-      - install-and-lint-project:
-          requires:
-            - database Up
-
+      - build_and_test
