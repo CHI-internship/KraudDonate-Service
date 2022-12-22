@@ -2,7 +2,6 @@ import HintRepository from './hint.repository';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../../services';
 import { HintMatchingObject, hintMock } from '../test/hint.mock';
-import { UserMatchingObject } from '../../user/test/user-mock';
 
 describe('Hint Repository', () => {
   let hintRepository: HintRepository;
@@ -12,7 +11,6 @@ describe('Hint Repository', () => {
     await prismaService.volunteer_hint
       .create({
         data: {
-          id: hintMock().id,
           title: hintMock().title,
           info: hintMock().info,
           user_id: hintMock().user_id,
