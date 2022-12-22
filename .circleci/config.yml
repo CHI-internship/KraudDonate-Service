@@ -3,6 +3,12 @@ orbs:
   node: circleci/node@5.0.3
   docker: circleci/docker@2.2.0
 jobs:
+  database Up:
+    executor: docker/docker
+    steps:
+      - setup_remote_docker
+      - checkout
+      -
   install-and-lint-project:
     executor:
       name: node/default
@@ -18,11 +24,6 @@ jobs:
       - run:
           name: Up Db
           command: docker run -d --name postgresdb_main --rm -v /postgres-data:/var/lib/postgresql/data -p 6532:5432 postgresdb_main
-  database Up:
-    executor: docker/docker
-    steps:
-      - setup_remote_docker
-      - checkout
 
 #      - run:
 #          name: Make Tests
