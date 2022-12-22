@@ -1,3 +1,4 @@
+setup: true
 version: 2.1
 orbs:
   node: circleci/node@5.0.2
@@ -42,8 +43,9 @@ jobs:
           command: npm run test
 workflows:
   workflow_first:
-    jobs:
-      - check-lint-test:
+    setup:
+      jobs:
+        - check-lint-test:
           configuration_path: ".circleci/main.yml"
           parameters: /home/circleci/params.json
           pre-steps:
