@@ -2,6 +2,7 @@ import HintRepository from './hint.repository';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../../services';
 import { HintMatchingObject, hintMock } from '../test/hint.mock';
+import { userMock } from '../../user/repository/user.repository.mock';
 
 describe('Hint Repository', () => {
   let hintRepository: HintRepository;
@@ -57,7 +58,7 @@ describe('Hint Repository', () => {
       info: 'new info',
     };
     test('should create hint', async () => {
-      const newHint = await hintRepository.createHint(hint, 1);
+      const newHint = await hintRepository.createHint(hint, userMock().id);
       expect(newHint).toMatchObject(HintMatchingObject);
       await prismaService.volunteer_hint.delete({ where: { id: newHint.id } });
     });
