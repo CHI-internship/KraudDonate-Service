@@ -80,7 +80,7 @@ describe('Hint Repository', () => {
   afterAll(async () => {
     await prismaService.volunteer_hint.delete({
       where: {
-        id: hintMock().id,
+        id,
       },
     });
   });

@@ -37,9 +37,14 @@ jobs:
           name: Run seed
           command: npx prisma db seed
       - run:
-          command: npm run test
           name: Run tests
+          command: npm run test
 workflows:
   workflow_first:
     jobs:
-      - check-lint-test
+      - check-lint-test:
+          filters:
+            branches:
+              only:
+                - dev
+                - master
