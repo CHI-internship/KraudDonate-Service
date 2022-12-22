@@ -58,21 +58,19 @@ describe('Hint Repository', () => {
       info: 'new info',
     };
     test('should create hint', async () => {
-      const newHint = await hintRepository.createHint(hint, 5);
-      expect(newHint).toMatchObject(HintMatchingObject);
-      await prismaService.volunteer_hint.delete({ where: { id: newHint.id } });
-    });
-  });
-
-  describe('get user by id', () => {
-    test('get by id', async () => {
-      const user = await prismaService.user.findFirst({
+      const user = await prismaService.user.findUnique({
         where: {
           id: 5,
         },
       });
       console.log(user);
-      expect(user).toMatchObject(UserMatchingObject);
+      if (user) {
+        const newHint = await hintRepository.createHint(hint, user.id);
+        expect(newHint).toMatchObject(HintMatchingObject);
+        await prismaService.volunteer_hint.delete({
+          where: { id: newHint.id },
+        });
+      }
     });
   });
 
