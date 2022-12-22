@@ -4,11 +4,20 @@ orbs:
   docker: circleci/docker@2.2.0
 jobs:
   database Up:
-    executor: docker/docker
+    docker:
+      - image: cimg/postgres:14.0
+        auth:
+          username: postgres
+          password: root
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: main
     steps:
-      - setup_remote_docker
-      - checkout
-      -
+        - setup_remote_docker
+        - checkout
+        - run:
+            name: Up Db
+            command: docker run -d --name postgresdb_main --rm -v /postgres-data:/var/lib/postgresql/data -p 6532:5432 postgresdb_main
   install-and-lint-project:
     executor:
       name: node/default
@@ -21,9 +30,7 @@ jobs:
       - run:
           name: Lint project
           command: npm run lint:fix
-      - run:
-          name: Up Db
-          command: docker run -d --name postgresdb_main --rm -v /postgres-data:/var/lib/postgresql/data -p 6532:5432 postgresdb_main
+
 
 #      - run:
 #          name: Make Tests
