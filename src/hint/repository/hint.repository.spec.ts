@@ -68,8 +68,11 @@ describe('Hint Repository', () => {
       title: 'update title',
       info: 'update info',
     };
-    test('should create hint', async () => {
-      const updateHint = await hintRepository.updateHintById(2, hint);
+    test('should update hint', async () => {
+      const updateHint = await hintRepository.updateHintById(
+        hintMock().id,
+        hint,
+      );
       expect(updateHint).toMatchObject(HintMatchingObject);
     });
   });

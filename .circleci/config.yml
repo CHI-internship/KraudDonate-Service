@@ -40,6 +40,6 @@ jobs:
           command: npm run test
           name: Run tests
 workflows:
-  my-custom-workflow:
+  install-lint-test:
     jobs:
       - build_and_test
