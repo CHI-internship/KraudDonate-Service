@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   node: circleci/node@5.0.2
 jobs:
-  build_and_test:
+  check-lint-test:
     executor:
       name: node/default
       tag: '16.17.1'
@@ -40,6 +40,6 @@ jobs:
           command: npm run test
           name: Run tests
 workflows:
-  install-lint-test:
+  workflow_first:
     jobs:
-      - build_and_test
+      - check-lint-test
