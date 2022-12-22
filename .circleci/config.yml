@@ -6,12 +6,6 @@ jobs:
   database Up:
     docker:
       - image: cimg/postgres:15.1.0
-        auth:
-          username: postgres
-          password: root
-        environment:
-          POSTGRES_USER: postgres
-          POSTGRES_DB: main
     steps:
         - setup_remote_docker
         - checkout
