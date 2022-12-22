@@ -2,7 +2,7 @@ import HintRepository from './hint.repository';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../../services';
 import { HintMatchingObject, hintMock } from '../test/hint.mock';
-import { userMock } from '../../user/repository/user.repository.mock';
+import { UserMatchingObject } from '../../user/test/user-mock';
 
 describe('Hint Repository', () => {
   let hintRepository: HintRepository;
@@ -61,6 +61,18 @@ describe('Hint Repository', () => {
       const newHint = await hintRepository.createHint(hint, 5);
       expect(newHint).toMatchObject(HintMatchingObject);
       await prismaService.volunteer_hint.delete({ where: { id: newHint.id } });
+    });
+  });
+
+  describe('get user by id', () => {
+    test('get by id', async () => {
+      const user = await prismaService.user.findFirst({
+        where: {
+          id: 5,
+        },
+      });
+      console.log(user);
+      expect(user).toMatchObject(UserMatchingObject);
     });
   });
 
