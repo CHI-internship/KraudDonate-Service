@@ -60,7 +60,7 @@ describe('Hint Repository', () => {
     test('should create hint', async () => {
       const newHint = await hintRepository.createHint(hint, 5);
       expect(newHint).toMatchObject(HintMatchingObject);
-      // await prismaService.volunteer_hint.delete({ where: { id: newHint.id } });
+      await prismaService.volunteer_hint.delete({ where: { id: newHint.id } });
     });
   });
 

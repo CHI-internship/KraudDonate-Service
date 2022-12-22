@@ -72,8 +72,8 @@ export default class HintRepository
       const newHint = await tx.volunteer_hint
         .create({
           data: {
-            info: hint.info,
             title: hint.title,
+            info: hint.info,
             user_id,
           },
         })
