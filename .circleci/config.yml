@@ -3,7 +3,9 @@ orbs:
   node: circleci/node@5.0.2
 jobs:
   build_and_test:
-    executor: node/default
+    executor:
+      name: node/default
+      tag: '16.17.1'
     docker:
       - image: circleci/node
         environment:
@@ -21,16 +23,19 @@ jobs:
           name: Wait for db to run
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
       - node/install:
-          node-version: "16.15.1"
+          node-version: "16.17.1"
       - run:
-          command: npm i
           name: Run installation of packages
+          command: npm i
       - run:
-          command: npx prisma migrate dev
+          name: Run Linter
+          command: npm run lint
+      - run:
           name: Sync Prisma with Database
+          command: npx prisma migrate dev
       - run:
-          command: npx prisma db seed
           name: Run seed
+          command: npx prisma db seed
       - run:
           command: npm run test
           name: Run tests
