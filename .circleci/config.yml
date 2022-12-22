@@ -15,25 +15,23 @@ jobs:
       - run:
           name: Lint project
           command: npm run lint:fix
-#      - run:
-#          name: Make Tests
-#          command: npm run test
+      - run:
+          name: Up Db
+          command: docker run -d --name postgresdb_main --rm -v /postgres-data:/var/lib/postgresql/data -p 6532:5432 postgresdb_main
   database Up:
     executor: docker/docker
     steps:
       - setup_remote_docker
       - checkout
-      - run:
-            name: Up Db
-            command: docker run -d --name postgresdb_main --rm -v /postgres-data:/var/lib/postgresql/data -p 6532:5432 postgresdb_main
-      - run:
-          name: Make Tests
-          command: npm run test
+
+#      - run:
+#          name: Make Tests
+#          command: npm run test
 workflows:
   node-tests:
     jobs:
-      - install-and-lint-project
       - database Up:
+      - install-and-lint-project:
           requires:
-            - install-and-lint-project
+            - database Up
 
