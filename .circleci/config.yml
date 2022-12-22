@@ -1,4 +1,3 @@
-setup: true
 version: 2.1
 orbs:
   node: circleci/node@5.0.2
@@ -43,18 +42,6 @@ jobs:
           command: npm run test
 workflows:
   workflow_first:
-    setup:
-      jobs:
-        - check-lint-test:
-          configuration_path: ".circleci/main.yml"
-          parameters: /home/circleci/params.json
-          pre-steps:
-            - run:
-              command: |
-                    if [ -z "${CIRCLE_PULL_REQUEST##*/}" ]
-                    then
-                      IS_PR=false
-                    else
-                      IS_PR=true
-                    fi
-                    echo '{ "is_pr": '$IS_PR' }' >> /home/circleci/params.json
+    jobs:
+      - check-lint-test:
+          pull_request: true
