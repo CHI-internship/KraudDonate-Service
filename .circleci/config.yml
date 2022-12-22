@@ -15,9 +15,6 @@ jobs:
     steps:
         - setup_remote_docker
         - checkout
-        - run:
-            name: Up Db
-            command: docker run -d --name postgresdb_main --rm -v /postgres-data:/var/lib/postgresql/data -p 6532:5432 postgresdb_main
   install-and-lint-project:
     executor:
       name: node/default
@@ -38,7 +35,7 @@ jobs:
 workflows:
   node-tests:
     jobs:
-      - database Up:
+      - database Up
       - install-and-lint-project:
           requires:
             - database Up
