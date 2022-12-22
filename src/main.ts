@@ -15,7 +15,7 @@ async function bootstrap() {
     exposedHeaders: 'Authorization',
   });
   const config = new DocumentBuilder()
-    .setTitle('Kraud Donate main service')
+    .setTitle('Kraud Donate main service!!!')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
