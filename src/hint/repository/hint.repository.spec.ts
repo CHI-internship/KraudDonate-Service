@@ -6,9 +6,10 @@ import { HintMatchingObject, hintMock } from '../test/hint.mock';
 describe('Hint Repository', () => {
   let hintRepository: HintRepository;
   const prismaService = new PrismaService();
+  let id: number;
 
   beforeAll(async () => {
-    await prismaService.volunteer_hint
+    const hint = await prismaService.volunteer_hint
       .create({
         data: {
           title: hintMock().title,
@@ -19,6 +20,7 @@ describe('Hint Repository', () => {
       .catch(() => {
         return;
       });
+    id = hint?.id as number;
   });
 
   beforeEach(async () => {
@@ -44,7 +46,7 @@ describe('Hint Repository', () => {
 
   describe('GetHintById', () => {
     test('should find a existing hint', async () => {
-      expect(await hintRepository.getHintById(hintMock().id)).toMatchObject(
+      expect(await hintRepository.getHintById(id)).toMatchObject(
         HintMatchingObject,
       );
     });
@@ -56,19 +58,11 @@ describe('Hint Repository', () => {
       info: 'new info',
     };
     test('should create hint', async () => {
-      const user = await prismaService.user.findUnique({
-        where: {
-          id: 5,
-        },
+      const newHint = await hintRepository.createHint(hint, 2);
+      expect(newHint).toMatchObject(HintMatchingObject);
+      await prismaService.volunteer_hint.delete({
+        where: { id: newHint.id },
       });
-      console.log(user);
-      if (user) {
-        const newHint = await hintRepository.createHint(hint, user.id);
-        expect(newHint).toMatchObject(HintMatchingObject);
-        await prismaService.volunteer_hint.delete({
-          where: { id: newHint.id },
-        });
-      }
     });
   });
 
@@ -78,10 +72,7 @@ describe('Hint Repository', () => {
       info: 'update info',
     };
     test('should update hint', async () => {
-      const updateHint = await hintRepository.updateHintById(
-        hintMock().id,
-        hint,
-      );
+      const updateHint = await hintRepository.updateHintById(id, hint);
       expect(updateHint).toMatchObject(HintMatchingObject);
     });
   });
