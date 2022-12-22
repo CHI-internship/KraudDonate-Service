@@ -77,7 +77,8 @@ export default class HintRepository
             user_id,
           },
         })
-        .catch(() => {
+        .catch((e) => {
+          console.log(e);
           throw new BadRequestException('Something went wrong');
         });
       if (hint.photo?.length) {
