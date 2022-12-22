@@ -29,6 +29,9 @@ jobs:
           command: npx prisma migrate dev
           name: Sync Prisma with Database
       - run:
+          command: npx prisma migrate reset
+          name: Run seed
+      - run:
           command: npm run test
           name: Run tests
 workflows:
