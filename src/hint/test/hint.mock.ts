@@ -5,8 +5,8 @@ export const hintMock = (): IHint => {
     id: 1,
     title: 'title',
     info: 'info',
-    user_id: 2,
-    createdAt: new Date('2022-12-09T13:54:37.019Z'),
+    user_id: 1,
+    createdAt: new Date('2022-12-15 16:41:26.096'),
     hint_photo: [],
   };
 };
