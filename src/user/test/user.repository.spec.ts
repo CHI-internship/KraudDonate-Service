@@ -24,11 +24,11 @@ describe('UserRepository', () => {
   }, 10000);
 
   afterAll(async () => {
-    // await prismaService.user
-    //   .delete({ where: { email: 'newemail@gmail.com' } })
-    //   .catch(() => {
-    //     return;
-    //   });
+    await prismaService.user
+      .delete({ where: { email: 'newemail@gmail.com' } })
+      .catch(() => {
+        return;
+      });
     await prismaService.$disconnect();
   }, 10000);
 
