@@ -43,9 +43,4 @@ jobs:
 workflows:
   workflow_first:
     jobs:
-      - check-lint-test:
-          filters:
-            branches:
-              only:
-                - dev
-                - master
+      - check-lint-test
