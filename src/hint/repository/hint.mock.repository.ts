@@ -20,6 +20,7 @@ export default class HintMockRepository
           user_id: 1,
           createdAt: new Date(),
           hint_photo: [],
+          updatedAt: null,
         },
       ],
     };
@@ -32,6 +33,7 @@ export default class HintMockRepository
       info: 'info',
       user_id: 1,
       createdAt: new Date(),
+      updatedAt: null,
       hint_photo: [],
     };
   }
@@ -44,6 +46,7 @@ export default class HintMockRepository
       user_id: 1,
       createdAt: new Date(),
       hint_photo: [],
+      updatedAt: null,
     };
   }
 
@@ -55,6 +58,7 @@ export default class HintMockRepository
       user_id: 1,
       createdAt: new Date(),
       hint_photo: [],
+      updatedAt: null,
     };
   }
 }

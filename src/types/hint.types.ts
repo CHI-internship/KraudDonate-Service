@@ -5,6 +5,7 @@ export interface IHint {
   user_id: number;
   createdAt: Date;
   hint_photo?: IHintPhoto[];
+  updatedAt: Date | null;
 }
 
 interface IHintPhoto {
@@ -12,6 +13,7 @@ interface IHintPhoto {
   photo: string;
   hint_id: number;
   createdAt: Date;
+  updatedAt: Date | null;
 }
 
 export interface IHints {
