@@ -6,6 +6,22 @@ import { HintMatchingObject, hintMock } from '../test/hint.mock';
 describe('Hint Repository', () => {
   let hintRepository: HintRepository;
   const prismaService = new PrismaService();
+  let id: number;
+
+  beforeAll(async () => {
+    const hint = await prismaService.volunteer_hint
+      .create({
+        data: {
+          title: hintMock().title,
+          info: hintMock().info,
+          user_id: hintMock().user_id,
+        },
+      })
+      .catch(() => {
+        return;
+      });
+    id = hint?.id as number;
+  });
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -30,7 +46,7 @@ describe('Hint Repository', () => {
 
   describe('GetHintById', () => {
     test('should find a existing hint', async () => {
-      expect(await hintRepository.getHintById(hintMock().id)).toMatchObject(
+      expect(await hintRepository.getHintById(id)).toMatchObject(
         HintMatchingObject,
       );
     });
@@ -54,7 +70,7 @@ describe('Hint Repository', () => {
       info: 'update info',
     };
     test('should create hint', async () => {
-      const updateHint = await hintRepository.updateHintById(2, hint);
+      const updateHint = await hintRepository.updateHintById(id, hint);
       expect(updateHint).toMatchObject(HintMatchingObject);
     });
   });

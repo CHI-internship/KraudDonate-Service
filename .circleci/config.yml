@@ -1,0 +1,46 @@
+version: 2.1
+orbs:
+  node: circleci/node@5.0.2
+  continuation: circleci/continuation@0.2.0
+jobs:
+  check-lint-test:
+    executor:
+      name: node/default
+      tag: '16.17.1'
+    docker:
+      - image: circleci/node
+        environment:
+          DATABASE_URL: postgresql://postgres@localhost/main
+      - image: circleci/postgres
+        environment:
+          PGHOST: localhost
+          PGUSER: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: main
+          POSTGRES_HOST_AUTH_METHOD: trust
+    steps:
+      - checkout
+      - run:
+          name: Wait for db to run
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - node/install:
+          node-version: "16.17.1"
+      - run:
+          name: Run installation of packages
+          command: npm i
+      - run:
+          name: Run Linter
+          command: npm run lint:fix
+      - run:
+          name: Sync Prisma with Database
+          command: npx prisma migrate dev
+      - run:
+          name: Run seed
+          command: npx prisma db seed
+      - run:
+          name: Run tests
+          command: npm run test
+workflows:
+  workflow_first:
+    jobs:
+      - check-lint-test
