@@ -37,7 +37,7 @@ export class AuthService {
   async login(credentials: LoginUserDto) {
     const registeredUser = await this.userService.getByEmail(credentials.email);
     if (!registeredUser) {
-      throw new BadRequestException('Something wrong');
+      throw new BadRequestException('Someng wrong');
     }
 
     delete credentials.recaptchaToken;
