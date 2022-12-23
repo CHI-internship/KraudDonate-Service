@@ -20,8 +20,8 @@ export default class VolunteerMockRepository
       ],
       userId: 1,
       status: 'open',
-      createdAt: null,
-      updatedAt: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
   }
   async createRequest(
