@@ -1,7 +1,6 @@
 import { Volunteer_activation_request } from '@prisma/client';
 import Repository from '../../repository/repository';
 import { CreateRequestDto } from '../dto/create-request.dto';
-import { GetVolunteerDto } from '../dto/get-Volunteer.dto';
 import IVolunteerRepository from './interface';
 
 export default class VolunteerMockRepository
@@ -21,6 +20,8 @@ export default class VolunteerMockRepository
       ],
       userId: 1,
       status: 'open',
+      createdAt: null,
+      updatedAt: null,
     };
   }
   async createRequest(
@@ -36,6 +37,8 @@ export default class VolunteerMockRepository
       ],
       userId: 1,
       status: 'open',
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
   }
   async deleteRequest(id: number): Promise<void> {

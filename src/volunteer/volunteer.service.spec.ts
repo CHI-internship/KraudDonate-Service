@@ -6,7 +6,6 @@ import VolunteerMockRepository from './repository/volunteer.mock.repository';
 import { MockAwsService } from '../services/mocks';
 import { BullModule, getQueueToken } from '@nestjs/bull';
 import { faker } from '@faker-js/faker';
-import { BadRequestException } from '@nestjs/common';
 
 describe('Test Volunteer Service', () => {
   let volunteerService: VolunteerService;
@@ -23,6 +22,8 @@ describe('Test Volunteer Service', () => {
     documents: [expect.any(String)],
     status: expect.any(String),
     id: expect.any(Number),
+    createdAt: expect.any(Date),
+    updatedAt: expect.any(Date),
   };
 
   beforeEach(async () => {
