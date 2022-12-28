@@ -2,27 +2,27 @@
 ALTER TABLE "Volunteer_activation_request" ADD COLUMN     "createdAt" TIMESTAMP(3),
 ADD COLUMN     "updatedAt" TIMESTAMP(3);
 
-create or replace function new_request() returns trigger
-	as $$
-	begin
-	update "Volunteer_activation_request" set "createdAt" = now() where id = new.id;
-	return new;
-	end;
-	$$ language plpgsql;
+CREATE OR REPLACE FUNCTION new_request() RETURNS TRIGGER
+	AS $$
+	BEGIN
+	UPDATE "Volunteer_activation_request" SET "createdAt" = NOW() WHERE id = new.id;
+	RETURN new;
+	END;
+	$$ LANGUAGE plpgsql;
 
-drop trigger if exists tr_new_request on "Volunteer_activation_request";
-create trigger tr_new_request after insert on "Volunteer_activation_request"
-for each row execute procedure new_request();
+DROP TRIGGER IF EXISTS tr_new_request ON "Volunteer_activation_request";
+CREATE TRIGGER tr_new_request AFTER INSERT ON "Volunteer_activation_request"
+FOR EACH ROW EXECUTE PROCEDURE new_request();
 
 
-create or replace function update_request() returns trigger
-	as $$
-	begin
-	update "Volunteer_activation_request" set "updatedAt" = now() where status = new.status;
-	return new;
-	end;
-	$$ language plpgsql;
+CREATE OR REPLACE FUNCTION update_request() RETURNS TRIGGER
+	AS $$
+	BEGIN
+	UPDATE "Volunteer_activation_request" SET "updatedAt" = NOW() WHERE status = new.status;
+	RETURN new;
+	END;
+	$$ LANGUAGE plpgsql;
 
-drop trigger if exists tr_update_request on "Volunteer_activation_request";
-create trigger tr_update_request after update of "status" on "Volunteer_activation_request"
-for each row execute procedure update_request()
+DROP TRIGGER IF EXISTS tr_update_request ON "Volunteer_activation_request";
+CREATE TRIGGER tr_update_request AFTER UPDATE OF "status" ON "Volunteer_activation_request"
+FOR EACH ROW EXECUTE PROCEDURE update_request();
