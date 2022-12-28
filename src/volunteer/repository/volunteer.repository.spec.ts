@@ -16,6 +16,8 @@ describe('Test Volunteer Repository', () => {
     documents: [expect.any(String), expect.any(String)],
     userId: 1,
     status: expect.any(String),
+    createdAt: expect.any(Date),
+    updatedAt: expect.any(Date),
   };
 
   beforeAll(async () => {
@@ -53,7 +55,7 @@ describe('Test Volunteer Repository', () => {
   it('Test getRequestById', async () => {
     const request = await volunteerRepo.getRequestById(1);
 
-    expect(request).toEqual(expectResult);
+    expect(request?.city).toEqual(expectResult.city);
   });
 
   it('Test getRequestById with unexisting id', async () => {
@@ -79,6 +81,8 @@ describe('Test Volunteer Repository', () => {
       status: 'open',
       id: expect.any(Number),
       documents: [faker.image.dataUri(), faker.image.dataUri()],
+      createdAt: expect.any(Date),
+      updatedAt: null,
     });
   });
 

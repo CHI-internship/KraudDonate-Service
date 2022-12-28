@@ -57,6 +57,8 @@ model Volunteer_activation_request {
   user        User                   @relation(fields: [userId], references: [id])
   userId      Int                    @unique
   status      VolunteerRequestStatus @default(open)
+  createdAt   DateTime?
+  updatedAt    DateTime?
 }
 
 model Volunteer_hint {
