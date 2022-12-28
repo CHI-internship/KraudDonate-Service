@@ -60,21 +60,23 @@ model Volunteer_activation_request {
 }
 
 model Volunteer_hint {
-  id         Int                    @id @default(autoincrement())
-  title      String
-  info       String
-  user       User                   @relation(fields: [user_id], references: [id])
-  user_id    Int
-  hint_photo Volunteer_hint_photo[]
-  createdAt  DateTime               @default(now())
+  id          Int      @id @default(autoincrement())
+  title       String
+  info        String
+  user        User     @relation(fields: [user_id], references: [id])
+  user_id     Int
+  hint_photo  Volunteer_hint_photo[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime?
 }
 
 model Volunteer_hint_photo {
-  id        Int            @id @default(autoincrement())
-  photo     String
-  hint      Volunteer_hint @relation(fields: [hint_id], references: [id])
-  hint_id   Int
-  createdAt DateTime       @default(now())
+  id          Int      @id @default(autoincrement())
+  photo       String
+  hint        Volunteer_hint     @relation(fields: [hint_id], references: [id])
+  hint_id     Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime?
 }
 
 enum Role {

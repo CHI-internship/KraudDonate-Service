@@ -8,6 +8,7 @@ export const hintMock = (): IHint => {
     user_id: 2,
     createdAt: new Date('2022-12-09T13:54:37.019Z'),
     hint_photo: [],
+    updatedAt: null,
   };
 };
 export const HintMatchingObject = {
@@ -16,4 +17,14 @@ export const HintMatchingObject = {
   info: expect.any(String),
   user_id: expect.any(Number),
   createdAt: expect.any(Date),
+  updatedAt: null,
+};
+
+export const HintMatchingObjectUpdated = {
+  id: expect.any(Number),
+  title: expect.any(String),
+  info: expect.any(String),
+  user_id: expect.any(Number),
+  createdAt: expect.any(Date),
+  updatedAt: expect.any(Date),
 };
