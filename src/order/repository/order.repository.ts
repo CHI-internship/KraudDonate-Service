@@ -4,8 +4,12 @@ import { CreateOrderDto } from '../dto/create-order.dto';
 import { UpdateOrderDto } from '../dto/update-order.dto';
 import { OrderByCase } from '../order.service';
 import { OrderFiltersType } from '../../types/order-filters.type';
+import { IOrderRepository } from 'src/types';
 
-export default class OrderRepository extends Repository {
+export default class OrderRepository
+  extends Repository
+  implements IOrderRepository
+{
   async getAllOrders(filters: OrderFiltersType, orderByCase: OrderByCase) {
     const skip = filters.limit * (filters.page - 1);
 
